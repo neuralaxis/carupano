@@ -79,10 +79,10 @@ Aggregates in Carupano are classic DDD aggregates. They possess a unique identit
 Commands are POCOs that are sent to aggregates or stand alone command handlers through a [bus](#bus).
 
 #### Factories
-Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a (#command) commmand.
+Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a [commmand](#command).
 
 #### Events
-Events are POCOs that represent "something" important that happened in our domain model.
+Events are POCOs that represent "something" important that happened in our domain model. They are generally emitted as a result of executing a [command](#commands) but that is not required. They are also used to maintain the state of an aggregate via an event stream.
 
 #### Projections
 Projections are classes that subscribe to event streams of interest in order to build a new model from the accumulation of those events.
