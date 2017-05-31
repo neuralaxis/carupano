@@ -27,7 +27,7 @@ The models express the configuration of your bounded context.
             Model = builder.Build();
  ```       
  
- #### Aggregates
+#### Aggregates
 Aggregates in Carupano are classic DDD aggregates. They possess a unique identity attribute, handle [commands](#commands] and maintain their state through state changes. They are built not on relational models, but on event streams.
 
 - Aggregates do not need to inherit from any base class, and can have dependencies in its constructor.
@@ -74,4 +74,18 @@ Aggregates in Carupano are classic DDD aggregates. They possess a unique identit
         }
     }
    ```
+   
+#### Commands
+Commands are POCOs that are sent to aggregates or stand alone command handlers through a [bus](#bus).
 
+#### Factories
+Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a (#command) commmand.
+
+#### Events
+Events are POCOs that represent "something" important that happened in our domain model.
+
+#### Projections
+Projections are classes that subscribe to event streams of interest in order to build a new model from the accumulation of those events.
+
+#### Bus
+A bus is a simple interface that allows us to send messages across the system.
