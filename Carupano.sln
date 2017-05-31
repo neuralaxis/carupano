@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano", "Carupano\Carupano.csproj", "{06FDC509-C23B-408A-931F-3CCE1A76189B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano.UnitTests", "Carupano.UnitTests\Carupano.UnitTests.csproj", "{B9E2B76E-E3E7-47BE-824F-4983E7956A5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano.Specs", "Carupano.Specs\Carupano.Specs.csproj", "{F661F300-59A8-4497-8FEB-57152E32B58C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06FDC509-C23B-408A-931F-3CCE1A76189B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06FDC509-C23B-408A-931F-3CCE1A76189B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06FDC509-C23B-408A-931F-3CCE1A76189B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06FDC509-C23B-408A-931F-3CCE1A76189B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9E2B76E-E3E7-47BE-824F-4983E7956A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9E2B76E-E3E7-47BE-824F-4983E7956A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9E2B76E-E3E7-47BE-824F-4983E7956A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9E2B76E-E3E7-47BE-824F-4983E7956A5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F661F300-59A8-4497-8FEB-57152E32B58C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F661F300-59A8-4497-8FEB-57152E32B58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F661F300-59A8-4497-8FEB-57152E32B58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F661F300-59A8-4497-8FEB-57152E32B58C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
