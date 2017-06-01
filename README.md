@@ -8,8 +8,10 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
  - [Factories](#factories)
  - [Commands](#commands)
  - [Events](#commands)
- - [Projections](TODO)
- - [Jobs](TODO)
+ - [Projections](#projections)
+ - [Queries](#queries)
+ - [Jobs](#jobs)
+ - [REPL](#repl)
  
 ### Models
 The models express the configuration of your bounded context. 
@@ -87,5 +89,18 @@ Events are POCOs that represent "something" important that happened in our domai
 #### Projections
 Projections are classes that subscribe to event streams of interest in order to build a new model from the accumulation of those events.
 
+#### Queries
+Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement.
+
 #### Bus
 A bus is a simple interface that allows us to send messages across the system.
+
+#### REPL interface
+Carupano provides a command-line REPL interface to perform tasks such as:
+
+ - Resetting a projection
+ - Sending a command
+ - Running a query
+ - Viewing the event history for an aggregate
+ - Deleting an aggregate
+ - Rolling back an aggregate to a version
