@@ -104,10 +104,9 @@ Projections are classes that subscribe to event streams of interest in order to 
 
         public IEnumerable<ReservationListItem> Query(ReservationListQuery query)
         {
-            return _reservations.Skip(query.Page * query.PageSize).Take(query.PageSize).Where(c => c.Localizer.Contains(query.Localizer);
+            return _reservations.Skip(query.Page * query.PageSize).Take(query.PageSize).Where(c => c.Localizer.Contains(query.Localizer));
         }
     }
-
 ```
 #### Queries
 Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement.
