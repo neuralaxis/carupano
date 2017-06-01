@@ -89,7 +89,6 @@ Events are POCOs that represent "something" important that happened in our domai
 #### Projections
 Projections are classes that subscribe to event streams of interest in order to build a new model from the accumulation of those events.
 ```cs
-
     public class ReservationList
     {
         List<ReservationListItem> _reservations = new List<ReservationListItem>();
@@ -103,11 +102,12 @@ Projections are classes that subscribe to event streams of interest in order to 
             _reservations.Remove(resv);
         }
 
-        public IEnumerable<ReservationListItem> Query(SearchReservationsByLocalizer query)
+        public IEnumerable<ReservationListItem> Query(SearchReservationsByFlight query)
         {
-            return _reservations.Skip(query.Page * query.PageSize).Take(query.PageSize).Where(c => c.Localizer.Contains(query.Localizer));
+            return _reservations.Skip(query.Page * query.PageSize).Take(query.PageSize).Where(c => c.FlightId == query.FlightId);
         }
     }
+
 ```
 #### Queries
 Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement.
