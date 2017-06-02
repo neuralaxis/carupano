@@ -17,16 +17,17 @@ namespace Carupano.Specs
             builder.Aggregate<FlightReservation>(cfg =>
             {
                 cfg
-                .HasId(c => c.Localizer)
+                .WithId(c => c.Localizer)
                 .CreatedBy<CreateFlightReservation>()
                 .Executes<CancelFlightReservation>(c => c.Localizer);
             });
             builder.Projection<ReservationList>(cfg =>
             {
                 cfg
-                    .SubscribeTo<FlightReservationCreated>((p)=>p.On)
-                    .SubscribeTo<FlightReservationCancelled>((p) => p.On)
-                    .WithState(c => c.State);
+                    .WithState(c => c.LastEventId)
+                    .SubscribesTo<FlightReservationCreated>()
+                    .SubscribesTo<FlightReservationCancelled>()
+                    .RespondsTo<SearchReservationsByFlight>();
             });
             Model = builder.Build();
         }
@@ -53,6 +54,12 @@ namespace Carupano.Specs
         public void builds_projection_event_handlers()
         {
             Model.Projections.Single().EventHandlers.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void builds_query_models()
+        {
+            Model.Queries.Should().HaveCount(1);
         }
     }
 }

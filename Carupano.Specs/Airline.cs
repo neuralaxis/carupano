@@ -8,7 +8,7 @@ namespace CarupanoAirlines.Flight
     public class ReservationList
     {
         List<ReservationListItem> _reservations = new List<ReservationListItem>();
-        public long State { get; set; }
+        public long LastEventId { get; set; }
         public void On(FlightReservationCreated created)
         {
             _reservations.Add(new ReservationListItem { Localizer = created.Localizer, FlightId = created.Localizer });

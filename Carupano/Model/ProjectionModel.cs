@@ -8,9 +8,11 @@ namespace Carupano.Model
 {
     public class ProjectionModel
     {
-        List<EventHandlerModel> _handlers = new List<EventHandlerModel>();
+        List<EventHandlerModel> _events = new List<EventHandlerModel>();
+        List<QueryHandlerModel> _queries = new List<QueryHandlerModel>();
         public Type Type { get; }
-        public IEnumerable<EventHandlerModel> EventHandlers { get { return _handlers; } }
+        public IEnumerable<EventHandlerModel> EventHandlers { get { return _events; } }
+        public IEnumerable<QueryHandlerModel> QueryHandlers { get { return _queries; } }
         public ProjectionStateAccessor StateAccessor { get; private set; }
         public ProjectionModel(Type projection)
         {
@@ -19,9 +21,12 @@ namespace Carupano.Model
 
         public void AddEventHandler(EventHandlerModel eventHandlerModel)
         {
-            _handlers.Add(eventHandlerModel);
+            _events.Add(eventHandlerModel);
         }
-
+        public void AddQueryHandler(QueryHandlerModel model)
+        {
+            _queries.Add(model);
+        }
         public void SetStateAccessor(ProjectionStateAccessor accessor)
         {
             StateAccessor = accessor;
@@ -43,11 +48,13 @@ namespace Carupano.Model
         public ProjectionModel Model { get; }
         public object Object { get; }
         public IEnumerable<EventHandlerInstance> EventHandlers { get; }
+        public IEnumerable<QueryHandlerInstance> QueryHandlers { get; }
         public ProjectionInstance(ProjectionModel model, object instance)
         {
             Model = model;
             Object = instance;
-            EventHandlers = model.EventHandlers.Select(c => new EventHandlerInstance(this, c));
+            EventHandlers = model.EventHandlers.Select(c => new EventHandlerInstance(this.Object, c));
+            QueryHandlers = model.QueryHandlers.Select(c => new QueryHandlerInstance(this.Object, c));
         }
 
         public bool Handles(PublishedEvent evt)
@@ -58,6 +65,11 @@ namespace Carupano.Model
         public void Handle(PublishedEvent evt)
         {
             EventHandlers.Single(c => c.Handles(evt)).Handle(evt);
+        }
+
+        public bool Handles(QueryInstance query)
+        {
+            return false;
         }
 
         public void SetState(long seqNum)

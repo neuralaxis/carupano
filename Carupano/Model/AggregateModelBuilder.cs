@@ -30,7 +30,7 @@ namespace Carupano.Model
             return this;
         }
 
-        public AggregateModelBuilder<T> HasId(Expression<Func<T,string>> idAccessor)
+        public AggregateModelBuilder<T> WithId(Expression<Func<T,string>> idAccessor)
         {
             _model.SetIdentifier(new AggregateIdentifier((obj)=> {
                 var expr = idAccessor.Body as MemberExpression;

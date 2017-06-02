@@ -17,6 +17,7 @@ namespace Carupano.Model
             Factories = Aggregates.Select(c => c.FactoryHandler.Command);
             Projections = projections;
             Events = Projections != null ? Projections.SelectMany(c => c.EventHandlers.Select(x => x.Event)) : null;
+            Queries = Projections != null ? Projections.SelectMany(c => c.QueryHandlers.Select(x => x.Query)) : null;
         }
 
         public IEnumerable<AggregateModel> Aggregates { get; private set; }
@@ -24,6 +25,7 @@ namespace Carupano.Model
         public IEnumerable<CommandModel> Commands { get; private set; }
         public IEnumerable<CommandModel> Factories { get; private set; }
         public IEnumerable<EventModel> Events { get; private set; }
+        public IEnumerable<QueryModel> Queries { get; private set; }
         
     }
 }
