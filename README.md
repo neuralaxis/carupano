@@ -22,9 +22,16 @@ The models express the configuration of your bounded context.
             builder.Aggregate<FlightReservation>(cfg =>
             {
                 cfg
-                .HasId(c => c.Id)
+                .WithId(c => c.Localizer)
                 .CreatedBy<CreateFlightReservation>()
-                .Executes<CancelFlightReservation>(c => c.Id);
+                .Executes<CancelFlightReservation>(c => c.Localizer);
+            });
+            builder.Projection<ReservationList>(cfg =>
+            {
+                cfg
+                    .WithState(c => c.LastEventId)
+                    .SubscribesTo<FlightReservationCreated>()
+                    .SubscribesTo<FlightReservationCancelled>();
             });
             Model = builder.Build();
  ```       
