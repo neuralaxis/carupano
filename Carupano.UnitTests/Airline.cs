@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CarupanoAirlines.Flight
+namespace Carupano.UnitTests.Domains.Airline
 {
     public class ReservationList
     {
         List<ReservationListItem> _reservations = new List<ReservationListItem>();
-        public long State { get; set; }
         public void On(FlightReservationCreated created)
         {
             _reservations.Add(new ReservationListItem { Localizer = created.Localizer, FlightId = created.Localizer });

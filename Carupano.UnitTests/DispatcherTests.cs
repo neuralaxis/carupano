@@ -29,7 +29,7 @@ namespace Carupano.UnitTests
         [Fact]
         public void creates_aggregate()
         {
-            var result = Dispatcher.ExecuteCommand(new Domains.Airline.CreateFlightReservation("123"));
+            var result = Dispatcher.ExecuteCommand(new Domains.Airline.CreateFlightReservation("123", "ABC", "DEF"));
             result.Success.Should().BeTrue();
             result.DomainEvents.Count().Should().Be(1);
             result.DomainEvents.First().Object.Should().BeOfType<Domains.Airline.FlightReservationCreated>();

@@ -12,17 +12,19 @@ namespace Carupano.Model
     public class AggregateModel
     {
         readonly List<CommandHandlerModel> _commandHandlers;
+        readonly List<EventHandlerModel> _eventHandlers;
         public string Name { get; private set; }
         public Type Type { get; private set; }
         public CommandHandlerModel FactoryHandler { get; private set; }
         public AggregateIdentifier Identifier { get; private set; }
         public IEnumerable<CommandHandlerModel> CommandHandlers { get { return _commandHandlers; } }
-
+        public IEnumerable<EventHandlerModel> EventHandlers {  get { return _eventHandlers; } }
         public AggregateModel(Type type)
         {
             Type = type;
             Name = type.Name;
             _commandHandlers = new List<CommandHandlerModel>();
+            _eventHandlers = new List<EventHandlerModel>();
         }
 
         public void SetFactoryHandler(CommandHandlerModel model)
@@ -45,7 +47,10 @@ namespace Carupano.Model
         {
             AddCommandHandler(new CommandHandlerModel(Type.GetMethods().Single(c => c.Name == methodName)));
         }
-        
+        public void AddEventHandler(EventHandlerModel model)
+        {
+            _eventHandlers.Add(model);
+        }
         public bool IsCreatedBy(CommandModel model)
         {
             return FactoryHandler.Handles(model);
@@ -53,6 +58,10 @@ namespace Carupano.Model
         public bool HandlesCommand(CommandModel cmd)
         {
             return CommandHandlers.Any(c => c.Handles(cmd));
+        }
+        public bool IsSubscribedToEvent(EventModel model)
+        {
+            return EventHandlers.Any(c => c.Event.Type == model.Type);
         }
 
         public AggregateInstance CreateInstance(IServiceProvider container)
@@ -77,6 +86,7 @@ namespace Carupano.Model
             Object = instance;
             Factory = new CommandHandlerInstance(this, model.FactoryHandler);
             CommandHandlers = model.CommandHandlers.Select(c => new CommandHandlerInstance(this, c));
+            EventHandlers = model.EventHandlers.Select(c => new EventHandlerInstance(this, c));
         }
         public CommandExecutionResult Execute(CommandInstance cmd)
         {
@@ -89,6 +99,11 @@ namespace Carupano.Model
                 handler = CommandHandlers.Single(c => c.Handles(cmd));
 
             return handler.Execute(cmd);
+        }
+
+        public void Handle(DomainEventInstance evt)
+        {
+            EventHandlers.Single(c=>c.Handles(evt)).Handle(evt);
         }
 
         public void Apply(IEnumerable<DomainEventInstance> events)
@@ -138,13 +153,7 @@ namespace Carupano.Model
             return _expr(instance);
         }
     }
-    public class Command
-    {
-        public Command(object instance)
-        {
 
-        }
-    }
 
     public class CommandHandlerModel
     {
@@ -205,30 +214,48 @@ namespace Carupano.Model
     }
     public class EventHandlerModel
     {
-
+        public MethodInfo Method { get; }
+        public EventModel Event { get; }
+        public EventHandlerModel(MethodInfo method, EventModel evt)
+        {
+            Method = method;
+            Event = evt;
+        }
     }
     public class EventModel
     {
-
+        public Type Type { get; }
+        public EventModel(Type type)
+        {
+            Type = Type;
+        }
     }
     public class EventHandlerInstance
     {
+        public EventHandlerModel Model { get; set; }
+        public object Target { get; set; }
+        public EventHandlerInstance(object target, EventHandlerModel model)
+        {
+            Model = model;
+        }
+        public bool Handles(PublishedEvent evt)
+        {
+            return Model.Event.Type == evt.Object.GetType();
+        }
+        public void Handle(PublishedEvent evt)
+        {
+            Model.Method.Invoke(Target, new[] { evt.Object });
+        }
         public bool Handles(DomainEventInstance instance)
         {
-            return false;
+            return Model.Event.Type == instance.Object.GetType();
         }
         public void Handle(DomainEventInstance instance)
         {
-
+            Model.Method.Invoke(Target, new[] { instance.Object });
         }
     }
-    public class EventMessageInstance
-    {
-        public EventMessageInstance(object instance)
-        {
 
-        }
-    }
 
     public class DomainEventInstance
     {
@@ -239,6 +266,16 @@ namespace Carupano.Model
         }
     }
 
+    public class PublishedEvent
+    {
+        public object Object { get;}
+        public long SequenceNo { get; }
+        public PublishedEvent(object o, long seqNo)
+        {
+            Object = o;
+            SequenceNo = seqNo;
+        }
+    }
     public class CommandExecutionResult
     {
         public IEnumerable<DomainEventInstance> DomainEvents { get; }
