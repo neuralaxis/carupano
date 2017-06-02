@@ -7,7 +7,8 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
  - [Aggregates](#aggregates)
  - [Factories](#factories)
  - [Commands](#commands)
- - [Events](#commands)
+ - [Events](#events)
+ - [Event Stores](#event-stores)
  - [Projections](#projections)
  - [Queries](#queries)
  - [Jobs](#jobs)
@@ -85,16 +86,28 @@ Aggregates in Carupano are classic DDD aggregates. They possess a unique identit
    ```
    
 #### Commands
-Commands are POCOs that are sent to aggregates or stand alone command handlers through a [bus](#bus).
+Commands are POCOs that are sent to aggregates or stand alone command handlers through a [bus](#bus). They are usually named after an imperative verb on an aggregate, such as:
+
+*CancelFlightReservation*,*ChangeCustomerEmailAddress*, *CancelDelivery*,*ExecuteOrder*, etc.
 
 #### Factories
-Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a [commmand](#command).
+Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a [commmand](#command). They are generally named Create*Aggregate*, such as:
+
+*CreateFlightReservation*,*CreateCustomer*,*CreateOrder*,*ExecuteOrder*, etc.
 
 #### Events
-Events are POCOs that represent "something" important that happened in our domain model. They are generally emitted as a result of executing a [command](#commands) but that is not required. They are also used to maintain the state of an aggregate via an event stream.
+Events are POCOs that represent "something" important that happened in our domain model. They are generally emitted as a result of executing a [command](#commands) but that is not required. They are also used to maintain the state of an aggregate via an event stream. They are generally named in the past tense, and **always** represent something that has happened already. For example:
+
+*FlightReservationCreated*,*CustomerEmailAddressChanged*,*DeliveryCancelled*,*OrderExecuted*, etc.
+
+#### Event Stores
+An event store is a place to persist events, and from which to receive notification of new events having occurred.
 
 #### Projections
-Projections are classes that subscribe to event streams of interest in order to build a new model from the accumulation of those events.
+Projections are classes that subscribe to event streams of interest in order to build a new model from an accumulation of disparate events over time. They usually represent a view on a user interface that is important to the domain, and facilitate [queries](#queries), for example a *FlightReservationList*, *CustomerList*, *CancelledDeliveries*,*NewOrders*, etc.
+
+A valuable characteristic of projections is that they can be created at any time, from events that ocurred in the past and are persisted in our [event store](#event-stores)
+
 ```cs
     public class ReservationList
     {
