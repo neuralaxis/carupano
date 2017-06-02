@@ -95,7 +95,7 @@ Commands are POCOs that are sent to aggregates or stand alone command handlers t
 A bus is a simple interface that allows us to send [commands](#commands) across the system. Example implementations are an InProcess, AzureServiceBus, RabbitMQ, etc.
 
 #### Factories
-Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a [commmand](#command). They are generally named Create*Aggregate*, such as:
+Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) either from a [commmand](#command) or in some cases, as a reaction to an [event](#events) from another part of the system. Factory commands are generally named Create*Aggregate*, such as:
 
 *CreateFlightReservation*,*CreateCustomer*,*CreateOrder*,*ExecuteOrder*, etc.
 
