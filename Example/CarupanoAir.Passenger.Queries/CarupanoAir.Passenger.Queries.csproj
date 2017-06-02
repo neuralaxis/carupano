@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CarupanoAir.Passenger.Events\CarupanoAir.Passenger.Events.csproj" />
-  </ItemGroup>
-
 </Project>
