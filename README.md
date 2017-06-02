@@ -7,8 +7,9 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
  - [Aggregates](#aggregates)
  - [Factories](#factories)
  - [Commands](#commands)
+ - [Command Bus](#command-bus)
  - [Events](#events)
- - [Event Stores](#event-stores)
+ - [Event Store](#event-store)
  - [Projections](#projections)
  - [Queries](#queries)
  - [Jobs](#jobs)
@@ -90,8 +91,11 @@ Commands are POCOs that are sent to aggregates or stand alone command handlers t
 
 *CancelFlightReservation*,*ChangeCustomerEmailAddress*, *CancelDelivery*,*ExecuteOrder*, etc.
 
+#### Command Bus
+A bus is a simple interface that allows us to send [commands](#commands) across the system. Example implementations are an InProcess, AzureServiceBus, RabbitMQ, etc.
+
 #### Factories
-Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) from a [commmand](#command). They are generally named Create*Aggregate*, such as:
+Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) either from a [commmand](#command) or in some cases, as a reaction to an [event](#events) from another part of the system. Factory commands are generally named Create*Aggregate*, such as:
 
 *CreateFlightReservation*,*CreateCustomer*,*CreateOrder*,*ExecuteOrder*, etc.
 
@@ -130,10 +134,8 @@ A valuable characteristic of projections is that they can be created at any time
 
 ```
 #### Queries
-Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement.
+Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement. 
 
-#### Bus
-A bus is a simple interface that allows us to send messages across the system.
 
 #### REPL interface
 Carupano provides a command-line REPL interface to perform tasks such as:
