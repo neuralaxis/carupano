@@ -2,7 +2,7 @@
 
 namespace Carupano.Model
 {
-    internal class ProjectionStateAccessor
+    public class ProjectionStateAccessor
     {
         private Func<object, long> get;
         private Action<object, long> set;
@@ -13,11 +13,11 @@ namespace Carupano.Model
             this.set = set;
         }
 
-        public long GetState(object instance)
+        public long Get(object instance)
         {
             return get(instance);
         }
-        public void SetState(object instance, long seq)
+        public void Set(object instance, long seq)
         {
             set(instance, seq);
         }

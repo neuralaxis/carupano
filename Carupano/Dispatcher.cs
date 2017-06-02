@@ -10,7 +10,6 @@ namespace Carupano
     interface IDispatcher
     {
         CommandExecutionResult ExecuteCommand(object command);
-        void PublishEvent(object @event);
     }
 
     public class Dispatcher : IDispatcher
@@ -53,9 +52,7 @@ namespace Carupano
             Store.Save(aggregate.Name, instance.Id, result.DomainEvents.Select(c => c.Object));
             return result;
         }
+        
 
-        public void PublishEvent(object @event)
-        {
-        }
     }
 }

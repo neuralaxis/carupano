@@ -13,16 +13,17 @@ namespace Carupano.Model
         }
         public ProjectionModelBuilder<T> WithState(Expression<Func<T, long>> accessor)
         {
-            var get = new Func<object, string>((obj) => {
+            var get = new Func<object, long>((obj) => {
                 var expr = accessor.Body as MemberExpression;
                 var prop = expr.Member as PropertyInfo;
-                return (string)prop.GetValue(obj);
+                return (long)prop.GetValue(obj);
             });
-            var set = new Action<object, object>((obj,value) => {
+            var set = new Action<object, long>((obj,value) => {
                 var expr = accessor.Body as MemberExpression;
                 var prop = expr.Member as PropertyInfo;
                 prop.SetValue(obj, value);
             });
+            _model.SetStateAccessor(new ProjectionStateAccessor(get, set));
             return this;
         }
         public ProjectionModelBuilder<T> SubscribeTo<TEvent>(Expression<Func<T,Action<TEvent>>> handler)
