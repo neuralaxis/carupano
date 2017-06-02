@@ -12,6 +12,7 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
  - [Event Store](#event-store)
  - [Projections](#projections)
  - [Queries](#queries)
+ - [Services](#services)
  - [Jobs](#jobs)
  - [REPL](#repl)
  
@@ -136,6 +137,8 @@ A valuable characteristic of projections is that they can be created at any time
 #### Queries
 Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement. 
 
+### Services
+Services represent functionality that doesn't fit neatly into the concept of an aggregate. You can register services into Carupano, for dependency injection into your aggregates, projections, or command handlers.
 
 #### REPL interface
 Carupano provides a command-line REPL interface to perform tasks such as:
