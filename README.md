@@ -37,7 +37,7 @@ The models express the configuration of your bounded context.
  ```       
  
 #### Aggregates
-Aggregates in Carupano are classic DDD aggregates. They possess a unique identity attribute, handle [commands](#commands] and maintain their state through state changes. They are built not on relational models, but on event streams.
+Aggregates in Carupano are classic DDD aggregates. They possess a unique identity attribute, handle [commands](#commands), and persist their state through changesets known as [events](#events).
 
 - Aggregates do not need to inherit from any base class, and can have dependencies in its constructor.
 - There must be a [factory](#factories) defined for each aggregate.
