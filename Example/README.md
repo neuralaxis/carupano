@@ -3,30 +3,30 @@
 
 Carupano Air is an airline, and here's their software.
 
-##Domain
+## Domain
 
-Bounded Contexts
-Route
-Passenger
-Booking
+### Bounded Contexts
+- Route
+- Passenger
+- Booking
 
-Aggregates
-Reservation
-Notification
-Flight
-Passenger
+### Aggregates
+- Reservation
+- Notification
+- Flight
+- Passenger
 
-Value Objects
-Route
+### Value Objects
+- Route
 
-Projections
-FlightList
-PassengerList
-ReservationList
+### Projections
+- FlightList
+- PassengerList
+- ReservationList
 
-Queries
-GetFlights
-FindPassengerByEmail
-FindReservationsById
-FindReservationsByEmail
-FindReservationsByFlightId
+### Queries
+- GetFlights
+- FindPassengerByEmail
+- FindReservationsById
+- FindReservationsByEmail
+- FindReservationsByFlightId
