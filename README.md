@@ -8,8 +8,10 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
   
 ## Design Goals
  - Model DDD concepts themselves
- - Do not require implementation domain assets to inherit, extend or implement any Carupano libraries.
+ - Do not require implementation domain assets to inherit, extend or implement any Carupano libraries
  - Provide extensibility points
+ - Easy migration from monolith to microservices
+ - Convention over configuration
  
  ## Concepts
  
