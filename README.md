@@ -4,7 +4,9 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
  ## Goals
   - To enable the rapid development of expressive, scalable, robust software
   - To eliminate or minize the amount of infrastructure code necessary for value generation
-  - To provide a repeatable, common architecture that addresses most Information System's needs.
+  - To provide a repeatable, common architecture and patterns that address most Information System's needs.
+  - To eliminate or drastically reduce the amount of decision-making developers face day-to-day
+  
  ## Concepts
  
  - [Models](#models)
