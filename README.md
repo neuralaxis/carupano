@@ -1,6 +1,10 @@
 # CARUPANO
 A library for writing event-sourced CQRS bounded contexts with a minimal amount of intrusion on the core domain models.
  
+ ## Goals
+  - To enable the rapid development of expressive, scalable, robust software
+  - To eliminate or minize the amount of infrastructure code necessary for value generation
+  - To provide a repeatable, common architecture that addresses most Information System's needs.
  ## Concepts
  
  - [Models](#models)
