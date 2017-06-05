@@ -10,7 +10,8 @@ namespace Carupano.Model
     {
         public BoundedContextModel(
             IEnumerable<AggregateModel> aggregates,
-            IEnumerable<ProjectionModel> projections = null)
+            IEnumerable<ProjectionModel> projections = null,
+            IServiceProvider services = null)
         {
             Aggregates = aggregates;
             Commands = Aggregates.SelectMany(c => c.CommandHandlers.Select(x => x.Command));
@@ -18,6 +19,7 @@ namespace Carupano.Model
             Projections = projections;
             Events = Projections != null ? Projections.SelectMany(c => c.EventHandlers.Select(x => x.Event)) : null;
             Queries = Projections != null ? Projections.SelectMany(c => c.QueryHandlers.Select(x => x.Query)) : null;
+            Services = services;
         }
 
         public IEnumerable<AggregateModel> Aggregates { get; private set; }
@@ -26,6 +28,7 @@ namespace Carupano.Model
         public IEnumerable<CommandModel> Factories { get; private set; }
         public IEnumerable<EventModel> Events { get; private set; }
         public IEnumerable<QueryModel> Queries { get; private set; }
+        public IServiceProvider Services { get; private set; }
         
     }
 }

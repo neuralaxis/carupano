@@ -3,8 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Carupano.Model
+namespace Carupano.Configuration
 {
+    using Model;
     public class AggregateModelBuilder<T> : IAggregateModelBuilder
     {
         AggregateModel _model;

@@ -3,8 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Carupano.Model
+namespace Carupano.Configuration
 {
+    using Model;
     public class ProjectionModelBuilder<T> : IProjectionModelBuilder
     {
         ProjectionModel _model;
@@ -24,9 +25,16 @@ namespace Carupano.Model
                 var prop = expr.Member as PropertyInfo;
                 prop.SetValue(obj, value);
             });
-            _model.SetStateAccessor(new ProjectionStateAccessor(get, set));
+            _model.SetStateProvider(new ProjectionAccessorStateProvider(get, set));
             return this;
         }
+
+        public ProjectionModelBuilder<T> WithState(IProjectionStateProvider state)
+        {
+            _model.SetStateProvider(state);
+            return this;
+        }
+
 
         public ProjectionModelBuilder<T> RespondsTo<TQuery>()
         {

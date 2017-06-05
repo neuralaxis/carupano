@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace CarupanoAir.Passenger.Queries.Model
+
+namespace CarupanoAir.Passenger.ReadModels
 {
     public class Passenger
     {

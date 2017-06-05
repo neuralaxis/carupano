@@ -1,7 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputType>exe</OutputType>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <ApplicationIcon />
+    <OutputTypeEx>exe</OutputTypeEx>
+    <StartupObject />
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-preview1-final" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0-preview1-final" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Carupano.MongoDb\Carupano.MongoDb.csproj" />
+    <ProjectReference Include="..\..\Carupano.SqlServer\Carupano.SqlServer.csproj" />
+    <ProjectReference Include="..\..\Carupano\Carupano.csproj" />
+    <ProjectReference Include="..\CarupanoAir.Passenger.Events\CarupanoAir.Passenger.Events.csproj" />
+    <ProjectReference Include="..\CarupanoAir.Passenger.Queries\CarupanoAir.Passenger.Queries.csproj" />
+    <ProjectReference Include="..\CarupanoAir.Passenger.ReadModels\CarupanoAir.Passenger.ReadModels.csproj" />
+  </ItemGroup>
 
 </Project>

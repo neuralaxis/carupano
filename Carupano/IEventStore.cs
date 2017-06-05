@@ -11,6 +11,5 @@ namespace Carupano
     {
         IEnumerable Load(string aggregate, string id);
         void Save(string aggregate, string id, IEnumerable @events);
-        void Listen(Action<object, long> handler, long start);
     }
 }

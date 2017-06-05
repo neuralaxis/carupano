@@ -7,17 +7,13 @@ using Carupano.Model;
 
 namespace Carupano
 {
-    interface IDispatcher
-    {
-        CommandExecutionResult ExecuteCommand(object command);
-    }
 
-    public class Dispatcher : IDispatcher
+    public class AggregateManager : IAggregateManager
     {
         BoundedContextModel Model;
         IEventStore Store;
         IServiceProvider Services;
-        public Dispatcher(BoundedContextModel model, IEventStore store, IServiceProvider svcs)
+        public AggregateManager(BoundedContextModel model, IEventStore store, IServiceProvider svcs)
         {
             Model = model;
             Store = store;

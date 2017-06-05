@@ -8,9 +8,9 @@ namespace Carupano
 {
     public class ProjectionManager
     {
-        IEventStore Store;
+        IEventBus Store;
         IEnumerable<Model.ProjectionInstance> Projections;
-        public ProjectionManager(IEventStore store, IEnumerable<Model.ProjectionInstance> projections)
+        public ProjectionManager(IEventBus store, IEnumerable<Model.ProjectionInstance> projections)
         {
             Store = store;
             Projections = projections;
@@ -23,8 +23,12 @@ namespace Carupano
             {
                 Store.Listen((msg, seq) =>
                 {
-                    proj.Handle(new Model.PublishedEvent(msg, seq));
-                    proj.SetState(seq);
+                    var evt = new Model.PublishedEvent(msg, seq);
+                    if (proj.Handles(evt))
+                    {
+                        proj.Handle(evt);
+                        proj.SetState(seq);
+                    }
                 }, proj.GetState());
             }
         }

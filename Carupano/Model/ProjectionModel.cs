@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,12 @@ namespace Carupano.Model
     {
         List<EventHandlerModel> _events = new List<EventHandlerModel>();
         List<QueryHandlerModel> _queries = new List<QueryHandlerModel>();
+        Func<IServiceProvider, object> _factory;
         public Type Type { get; }
         public IEnumerable<EventHandlerModel> EventHandlers { get { return _events; } }
         public IEnumerable<QueryHandlerModel> QueryHandlers { get { return _queries; } }
-        public ProjectionStateAccessor StateAccessor { get; private set; }
+        
+        public IProjectionStateProvider State { get; private set; }
         public ProjectionModel(Type projection)
         {
             Type = projection;
@@ -27,9 +30,9 @@ namespace Carupano.Model
         {
             _queries.Add(model);
         }
-        public void SetStateAccessor(ProjectionStateAccessor accessor)
+        public void SetStateProvider(IProjectionStateProvider state)
         {
-            StateAccessor = accessor;
+            State = state;
         }
 
         public bool IsSubscribedToEvent(EventModel model)
@@ -74,11 +77,11 @@ namespace Carupano.Model
 
         public void SetState(long seqNum)
         {
-            Model.StateAccessor.Set(Object, seqNum);
+            Model.State.Set(Object, seqNum);
         }
         public long GetState()
         {
-            return Model.StateAccessor.Get(Object);
+            return Model.State.Get(Object);
         }
     }
 }

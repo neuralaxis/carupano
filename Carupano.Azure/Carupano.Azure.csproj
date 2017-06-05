@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Carupano\Carupano.csproj" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="0.0.5-preview" />
+  </ItemGroup>
+
+</Project>
