@@ -21,15 +21,15 @@ namespace Carupano
         {
             foreach(var proj in Projections)
             {
-                Store.Listen((msg, seq) =>
+                Store.SetEventHandler((msg, seq) =>
                 {
-                    var evt = new Model.PublishedEvent(msg, seq);
+                    var evt = new Model.PublishedEvent(msg, seq.Value);
                     if (proj.Handles(evt))
                     {
                         proj.Handle(evt);
-                        proj.SetState(seq);
+                        proj.SetState(seq.Value);
                     }
-                }, proj.GetState());
+                });
             }
         }
     }

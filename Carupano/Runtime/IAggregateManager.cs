@@ -2,7 +2,7 @@
 
 namespace Carupano
 {
-    interface IAggregateManager
+    public interface IAggregateManager
     {
         CommandExecutionResult ExecuteCommand(object command);
     }

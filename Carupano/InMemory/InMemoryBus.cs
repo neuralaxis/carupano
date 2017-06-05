@@ -10,36 +10,52 @@ namespace Carupano.InMemory
         ICommandBus, 
         IEventBus
     {
-        IAggregateManager Dispatcher;
-        Action<object, long> _eventHandler;
+        IAggregateManager _dispatcher;
+        Action<object, long?> _eventHandler;
         Action<object> _commandHandler;
         long _eventStart;
 
-        public void Listen(Action<object, long> handler, long start)
+        public InMemoryBus(IAggregateManager dispatcher)
         {
-            _eventHandler = handler;
-            _eventStart = start;
+
+        }
+        public void Publish(IEnumerable<Tuple<object, long>> evts)
+        {
+            foreach(var msg in evts)
+            {
+                Publish(msg.Item1, msg.Item2);
+            }
         }
 
-        public void Listen(Action<object> handler)
+        public void Publish(object evt, long? seq)
+        {
+            _eventHandler(evt, seq);
+
+        }
+        public void Publish(object evt, long seq)
+        {
+            _eventHandler(evt, seq);
+        }
+
+        public void Publish(object o)
+        {
+            _eventHandler(o, null);
+        }
+
+
+        public void Send(object cmd)
+        {
+            _dispatcher.ExecuteCommand(cmd);
+        }
+
+        public void SetCommandHandler(Action<object> handler)
         {
             _commandHandler = handler;
         }
 
-        public void Publish<T>(T evt)
+        public void SetEventHandler(Action<object, long?> handler)
         {
-            _eventHandler(evt, 0); //TODO: not 0
-        }
-
-        public void Publish<T>(IEnumerable<T> evts)
-        {
-            foreach (var evt in evts)
-                _eventHandler(evt, 0); //TODO: not 0.
-        }
-
-        public void Send<T>(T message)
-        {
-            _commandHandler(message);
+            _eventHandler = handler;
         }
     }
 }

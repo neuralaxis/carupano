@@ -10,5 +10,15 @@
             SequenceNo = seqNo;
         }
     }
+    public class PersistedEvent
+    {
+        public object Event { get; }
+        public long SequenceNo { get; }
+        public PersistedEvent(object evt, long seq)
+        {
+            Event = evt;
+            SequenceNo = seq;
+        }
+    }
     
 }

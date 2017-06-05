@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Carupano.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,9 +44,10 @@ namespace Carupano.SqlServer
             return list;
         }
 
-        public void Save(string aggregate, string id, IEnumerable events)
+        public IEnumerable<PersistedEvent> Save(string aggregate, string id, IEnumerable events)
         {
             _conn.Open();
+            var committed = new List<PersistedEvent>();
             try
             {
                 using (var trans = _conn.BeginTransaction())
@@ -56,12 +58,13 @@ namespace Carupano.SqlServer
                         {
                             using (var cmd = _conn.CreateCommand())
                             {
-                                cmd.CommandText = "insert into events (aggregate,aggregateid,event) values (@aggregate,@aggregateid,@event);";
+                                cmd.Transaction = trans;
+                                cmd.CommandText = "insert into events (aggregate,aggregateid,event) values (@aggregate,@aggregateid,@event); select @@SCOPE_IDENTITY";
                                 cmd.Parameters.AddWithValue("aggregate", aggregate);
                                 cmd.Parameters.AddWithValue("aggregateid", id);
                                 cmd.Parameters.AddWithValue("event", JsonConvert.SerializeObject(evt));
-                                cmd.Transaction = trans;
-                                cmd.ExecuteNonQuery();
+                                long seq = Convert.ToInt64(cmd.ExecuteScalar());
+                                committed.Add(new PersistedEvent(evt, seq));
                             }
                         }
                         trans.Commit();
@@ -78,6 +81,7 @@ namespace Carupano.SqlServer
             {
                 _conn.Close();
             }
+            return committed;
         }
 
         public void Dispose()

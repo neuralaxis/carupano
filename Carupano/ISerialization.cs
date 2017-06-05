@@ -6,7 +6,7 @@ namespace Carupano
 {
     public interface ISerialization
     {
-        byte[] Serialize();
-        object Deserialize(byte[] bytes);
+        byte[] Serialize(object o);
+        object Deserialize(Type type, byte[] bytes);
     }
 }
