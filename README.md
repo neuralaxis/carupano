@@ -1,6 +1,18 @@
 # CARUPANO
 A library for writing event-sourced CQRS bounded contexts with a minimal amount of intrusion on the core domain models.
  
+ ## Goals
+  - To facilitate the rapid development of expressive, scalable, robust software
+  - To reduce the amount of infrastructure code needed to achieve an Information System (IS) goal
+  - To reduce the number of design decisions necessary to provide functionality
+  
+## Design Goals
+ - Model DDD concepts themselves and provide the infrastructure and wiring through that model.
+ - Do not require implementation domain assets to inherit, extend or implement any Carupano libraries
+ - Provide extensibility points
+ - Migration path from monolith to microservices
+ - Convention over configuration
+ 
  ## Concepts
  
  - [Models](#models)
@@ -12,6 +24,7 @@ A library for writing event-sourced CQRS bounded contexts with a minimal amount 
  - [Event Store](#event-store)
  - [Projections](#projections)
  - [Queries](#queries)
+ - [Services](#services)
  - [Jobs](#jobs)
  - [REPL](#repl)
  
@@ -95,9 +108,9 @@ Commands are POCOs that are sent to aggregates or stand alone command handlers t
 A bus is a simple interface that allows us to send [commands](#commands) across the system. Example implementations are an InProcess, AzureServiceBus, RabbitMQ, etc.
 
 #### Factories
-Factories are methods in an aggregate, or a standalone class, that create [aggregates](#aggregates) either from a [commmand](#command) or in some cases, as a reaction to an [event](#events) from another part of the system. Factory commands are generally named Create*Aggregate*, such as:
+Factories are methods in an aggregate or a standalone class that create [aggregates](#aggregates) either from a [commmand](#command) or in some cases, as a reaction to an [event](#events) from another part of the system. Factory commands are generally named Create*Aggregate*, such as:
 
-*CreateFlightReservation*,*CreateCustomer*,*CreateOrder*,*ExecuteOrder*, etc.
+*CreateFlightReservation*,*CreateCustomer*,*CreateOrder*, etc.
 
 #### Events
 Events are POCOs that represent "something" important that happened in our domain model. They are generally emitted as a result of executing a [command](#commands) but that is not required. They are also used to maintain the state of an aggregate via an event stream. They are generally named in the past tense, and **always** represent something that has happened already. For example:
@@ -108,7 +121,7 @@ Events are POCOs that represent "something" important that happened in our domai
 An event store is a place to persist events, and from which to receive notification of new events having occurred.
 
 #### Projections
-Projections are classes that subscribe to event streams of interest in order to build a new model from an accumulation of disparate events over time. They usually represent a view on a user interface that is important to the domain, and facilitate [queries](#queries), for example a *FlightReservationList*, *CustomerList*, *CancelledDeliveries*,*NewOrders*, etc.
+Projections are classes that subscribe to event streams of interest in order to build a new model from an accumulation of disparate events over time. Projections are often used to build read models to be consumed by user interfaces or other processes via explicit [queries](#queries). Example names are *FlightReservationList*, *CustomerList*, *CancelledDeliveries*,*NewOrders*, etc.
 
 A valuable characteristic of projections is that they can be created at any time, from events that ocurred in the past and are persisted in our [event store](#event-stores)
 
@@ -134,8 +147,14 @@ A valuable characteristic of projections is that they can be created at any time
 
 ```
 #### Queries
-Queries are special [commands](#commands) that imply a question that demands an immediate answer. Typically handled by a projection, but not a requirement. 
+Queries are special [commands](#commands) that model a question that demands an immediate answer. Typically handled by a projection, but not a requirement.
 
+We can usually spot queries because they are named like a relational db stored procedure, Examples: *GetOrderById,FindOrdersByCustomerEmail,GetReservationsByFlight*. 
+
+### Services
+Services represent functionality that doesn't fit neatly into the concept of an aggregate. You can register service interfaces into Carupano, for injection into your aggregates, projections, or command handlers.
+
+Services can be facades for external systems, such as *IEmailSender*, or *IPaymentProcessor*, or perhaps isolated algorithms such as *IImageCompressor*, *IStockRecommendationService*.
 
 #### REPL interface
 Carupano provides a command-line REPL interface to perform tasks such as:
