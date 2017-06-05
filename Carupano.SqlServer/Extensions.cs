@@ -12,7 +12,7 @@ namespace Carupano.Configuration
         {
             model.Services(cfg =>
             {
-                cfg.AddScoped<IEventStore>((svcs) => new SqlServer.SqlServerEventStore(connectionString));
+                cfg.AddScoped<IEventStore>((svcs) => new SqlServer.SqlServerEventStore(connectionString, svcs.GetService<ISerialization>()));
             });
             return model;
         }

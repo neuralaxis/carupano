@@ -8,11 +8,13 @@ namespace Carupano
 {
     public class ProjectionManager
     {
-        IEventBus Store;
+        IEventBus Bus;
+        IEventStore Store;
         IEnumerable<Model.ProjectionInstance> Projections;
-        public ProjectionManager(IEventBus store, IEnumerable<Model.ProjectionInstance> projections)
+        public ProjectionManager(IEventStore store, IEventBus bus, IEnumerable<Model.ProjectionInstance> projections)
         {
             Store = store;
+            Bus = bus;
             Projections = projections;
 
         }
@@ -21,7 +23,17 @@ namespace Carupano
         {
             foreach(var proj in Projections)
             {
-                Store.SetEventHandler((msg, seq) =>
+                foreach(var msg in Store.Load(proj.GetState()))
+                {
+                    var evt = new Model.PublishedEvent(msg.Event, msg.SequenceNo);
+                    if(proj.Handles(evt))
+                    {
+                        proj.Handle(evt);
+                    }
+                }
+                //TODO: events might come while it's reading, so we need to set teh event handler
+                //first and accumulate while building projection.
+                Bus.SetEventHandler((msg, seq) =>
                 {
                     var evt = new Model.PublishedEvent(msg, seq.Value);
                     if (proj.Handles(evt))
