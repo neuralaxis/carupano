@@ -4,15 +4,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace Carupano.SqlServer
 {
     public class SqlServerEventStore : IEventStore, IDisposable
     {
         SqlConnection _conn;
-        public SqlServerEventStore(string connectionString)
+        ISerialization _serialization;
+        Encoding _encoding = Encoding.UTF8;
+        public SqlServerEventStore(string connectionString, ISerialization serialization)
         {
             _conn = new SqlConnection(connectionString);
+            _serialization = serialization;
         }
 
         public IEnumerable Load(string aggregate, string id)
@@ -23,15 +27,18 @@ namespace Carupano.SqlServer
             {
                 using (var cmd = _conn.CreateCommand())
                 {
-                    cmd.CommandText = "select id,event from events where aggregate=@aggregate and aggregateid=@id order by createdonutc asc";
+                    cmd.CommandText = "select seqnum,eventtype,event from events where aggregate=@aggregate and aggregateid=@id order by createdonutc asc";
                     cmd.Parameters.AddWithValue("aggregate", aggregate);
                     cmd.Parameters.AddWithValue("id", id);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            var data = JsonConvert.DeserializeObject(reader.GetString(1));
-                            list.Add(data);
+                            var seq = reader.GetInt64(0);
+                            var type = reader.GetString(1);
+                            var data = reader.GetString(2);
+                            var evt = _serialization.Deserialize(Type.GetType(type), _encoding.GetBytes(data));
+                            list.Add(evt);
                         }
                     }
                 }
@@ -59,10 +66,11 @@ namespace Carupano.SqlServer
                             using (var cmd = _conn.CreateCommand())
                             {
                                 cmd.Transaction = trans;
-                                cmd.CommandText = "insert into events (aggregate,aggregateid,event) values (@aggregate,@aggregateid,@event); select @@SCOPE_IDENTITY";
+                                cmd.CommandText = "insert into events (aggregate,aggregateid,event,eventtype) values (@aggregate,@aggregateid,@event,@eventtype); select @@SCOPE_IDENTITY";
                                 cmd.Parameters.AddWithValue("aggregate", aggregate);
                                 cmd.Parameters.AddWithValue("aggregateid", id);
-                                cmd.Parameters.AddWithValue("event", JsonConvert.SerializeObject(evt));
+                                cmd.Parameters.AddWithValue("eventtype", evt.GetType().Name);
+                                cmd.Parameters.AddWithValue("event", _encoding.GetString(_serialization.Serialize(evt)));
                                 long seq = Convert.ToInt64(cmd.ExecuteScalar());
                                 committed.Add(new PersistedEvent(evt, seq));
                             }
@@ -87,6 +95,31 @@ namespace Carupano.SqlServer
         public void Dispose()
         {
             _conn.Dispose();
+        }
+
+        public IEnumerable<PersistedEvent> Load(long seqNum)
+        {
+            _conn.Open();
+            try
+            {
+                var list = new List<PersistedEvent>();
+                using (var cmd = _conn.CreateCommand())
+                {
+                    cmd.CommandText = "select seqnum, eventtype,event from events order by createdonutc asc;";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        var seq = reader.GetInt64(0);
+                        var type = reader.GetString(1);
+                        var data = reader.GetString(2);
+                        var evt = _serialization.Deserialize(Type.GetType(type), _encoding.GetBytes(data));
+                        yield return new PersistedEvent(evt, seq);
+                    }
+                }
+            }
+            finally
+            {
+                _conn.Close();
+            }
         }
     }
 }

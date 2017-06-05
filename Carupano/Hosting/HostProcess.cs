@@ -37,7 +37,7 @@ namespace Carupano.Hosting
             else
             {
                 var model = builder.Build();
-                var mgr = new ProjectionManager(model.Services.GetService<IEventBus>(), model.Projections.Select(c => c.CreateInstance(model.Services)));
+                var mgr = new ProjectionManager(model.Services.GetService<IEventStore>(), model.Services.GetService<IEventBus>(), model.Projections.Select(c => c.CreateInstance(model.Services)));
                 mgr.Start();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Carupano is running...");
