@@ -34,12 +34,14 @@ The models express the configuration of your bounded context.
 #### Example
 ```cs
             var builder = new Model.BoundedContextModelBuilder();
+            
+            builder.WithSqlServerEventStore(Configuration["SqlServer"]);
             builder.Aggregate<FlightReservation>(cfg =>
             {
                 cfg
                 .WithId(c => c.Localizer)
                 .CreatedBy<CreateFlightReservation>()
-                .Executes<CancelFlightReservation>(c => c.Localizer);
+                .Executes<CancelFlightReservation>(msg => msg.Localizer);
             });
             builder.Projection<ReservationList>(cfg =>
             {
@@ -48,7 +50,10 @@ The models express the configuration of your bounded context.
                     .SubscribesTo<FlightReservationCreated>()
                     .SubscribesTo<FlightReservationCancelled>();
             });
-            Model = builder.Build();
+            
+            var model = builder.Build();
+            var host = new HostProcess(model);
+            host.RunUntilCtrlC();
  ```       
  
 #### Aggregates
