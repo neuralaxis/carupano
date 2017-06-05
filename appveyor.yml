@@ -2,11 +2,11 @@ version: 1.0.{build}
 install:
     - cmd: dotnet restore
 build_script:
-    - dotnet pack carupano\carupano.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER% -o .\.artifacts\
-    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER% -o .\.artifacts\
-    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER% -o .\.artifacts\
+    - dotnet pack carupano\carupano.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER%
+    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER%
+    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER%
 artifacts:
-    - path: '.artifacts\*.nupkg'
+    - path: '**\*.nupkg'
 deploy:
     - provider: NuGet
       symbol_server: https://ci.appveyor.com/nuget/mercadolar-rt092583xhk5
