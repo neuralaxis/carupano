@@ -12,7 +12,8 @@ deploy:
       server: https://ci.appveyor.com/nuget/mercadolar-rt092583xhk5
       api_key:
         secure: BOzn80QmSwYOmcvWl4ai+TPuRIN60FfNhjvFC706CEI=
+      skip_symbols: true
     - provider: NuGet
       api_key:
         secure: NB0A5eGcEehomtjB0mqeRunHDngjrsH4f9+2jxn/eeMsziN0WqKnS9kf5Etvfp3M
-       
+      skip_symbols: true
