@@ -33,7 +33,7 @@ The models express the configuration of your bounded context.
  
 #### Example
 ```cs
-            var builder = new Model.BoundedContextModelBuilder();
+            var builder = new BoundedContextModelBuilder();
             
             builder.WithSqlServerEventStore(Configuration["SqlServer"]);
             builder.Aggregate<FlightReservation>(cfg =>
