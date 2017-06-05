@@ -5,7 +5,7 @@ build_script:
     - dotnet pack carupano\carupano.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER% -o .\.artifacts\
     - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER% -o .\.artifacts\
     - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER% -o .\.artifacts\
-artifacts
+artifacts:
     - path: '.artifacts\*.nupkg'
 deploy:
     - provider: NuGet
