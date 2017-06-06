@@ -7,7 +7,7 @@ build_script:
     - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion={version}
 test_script:
     - cd carupano.unittests && dotnet xunit
-    - cd carupano.specs && dotnet xunit
+    - cd ..\carupano.specs && dotnet xunit
 artifacts:
     - path: '**\*.nupkg'
 deploy:
