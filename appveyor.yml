@@ -2,9 +2,9 @@ version: 1.0.{build}-beta
 install:
     - cmd: dotnet restore
 build_script:
-    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion={version}
-    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion={version}
-    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion={version}
+    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 test_script:
     - cd carupano.unittests && dotnet xunit
     - cd ..\carupano.specs && dotnet xunit
@@ -20,3 +20,10 @@ deploy:
       api_key:
         secure: NB0A5eGcEehomtjB0mqeRunHDngjrsH4f9+2jxn/eeMsziN0WqKnS9kf5Etvfp3M
       skip_symbols: true
+    - provider: GitHub
+      artifact: /.*\.nupkg/           # upload all NuGet packages to release assets
+      draft: false
+      prerelease: false
+      on:
+        branch: master                # release from master branch only
+        appveyor_repo_tag: true       # deploy on tag push only
