@@ -2,9 +2,9 @@ version: 1.0.{build}
 install:
     - cmd: dotnet restore
 build_script:
-    - dotnet pack carupano\carupano.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER%
-    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER%
-    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols --version-suffix %APPVEYOR_BUILD_NUMBER%
+    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion 1.0.0.%APPVEYOR_BUILD_NUMBER%
+    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion 1.0.0.%APPVEYOR_BUILD_NUMBER%
+    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion 1.0.0.%APPVEYOR_BUILD_NUMBER%
 artifacts:
     - path: '**\*.nupkg'
 deploy:
