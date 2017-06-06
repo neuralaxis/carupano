@@ -1,10 +1,10 @@
-version: 1.0.{build}
+version: 1.0.{build}-beta
 install:
     - cmd: dotnet restore
 build_script:
-    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion=1.0.%APPVEYOR_BUILD_NUMBER%-alpha
-    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion=1.0.%APPVEYOR_BUILD_NUMBER%-alpha
-    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion=1.0.%APPVEYOR_BUILD_NUMBER%-alpha
+    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion={version}
+    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion={version}
+    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion={version}
 test_script:
     - cd carupano.unittests && dotnet xunit
     - cd carupano.specs && dotnet xunit
