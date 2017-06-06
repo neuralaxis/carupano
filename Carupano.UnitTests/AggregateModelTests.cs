@@ -8,6 +8,7 @@ using System.Reflection;
 
 namespace Carupano.UnitTests
 {
+    using Configuration;
     using Model;
     using NSubstitute;
 

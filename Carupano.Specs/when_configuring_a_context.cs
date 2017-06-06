@@ -6,14 +6,15 @@ namespace Carupano.Specs
     using CarupanoAirlines.Flight;
     using FluentAssertions;
     using System.Linq;
-
+    using Carupano.Configuration;
+    using Model;
     public class when_configuring_a_context
     {
-        Model.BoundedContextModel Model;
+        BoundedContextModel Model;
 
         public when_configuring_a_context()
         {
-            var builder = new Model.BoundedContextModelBuilder();
+            var builder = new BoundedContextModelBuilder();
             builder.Aggregate<FlightReservation>(cfg =>
             {
                 cfg

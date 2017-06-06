@@ -5,6 +5,7 @@ using FluentAssertions;
 
 namespace Carupano.UnitTests
 {
+    using Configuration;
     using Model;
     using System.Linq;
 

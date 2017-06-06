@@ -5,6 +5,9 @@ build_script:
     - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion=1.0.0.%APPVEYOR_BUILD_NUMBER%
     - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion=1.0.0.%APPVEYOR_BUILD_NUMBER%
     - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion=1.0.0.%APPVEYOR_BUILD_NUMBER%
+test_script:
+    - cd carupano.unittests && dotnet xunit
+    - cd carupano.specs && dotnet xunit
 artifacts:
     - path: '**\*.nupkg'
 deploy:

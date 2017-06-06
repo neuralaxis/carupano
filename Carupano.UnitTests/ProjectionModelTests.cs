@@ -8,6 +8,7 @@ using NSubstitute;
 namespace Carupano.UnitTests
 {
     using Domains.Airline;
+    using Configuration;
     using Model;
     public class ProjectionModelTests
     {
