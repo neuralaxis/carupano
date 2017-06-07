@@ -8,6 +8,8 @@ using Carupano.Model;
 
 namespace Carupano.Azure
 {
+    using Messaging;
+    using Messaging.Internal;
     public class AzureServiceBus : ICommandBus, IEventBus
     {
         IDictionary<Type, QueueClient> _commands = new Dictionary<Type, QueueClient>();

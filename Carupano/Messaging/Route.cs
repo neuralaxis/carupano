@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Carupano.Messaging
+namespace Carupano.Messaging.Internal
 {
 
-    internal class Route
+    public class Route
     {
         public string Name { get; }
         public Type Type { get; }
@@ -20,7 +20,7 @@ namespace Carupano.Messaging
         }
     }
 
-    internal class RouteTable
+    public class RouteTable
     {
         public IEnumerable<Route> InboundCommands { get; }
         public IEnumerable<Route> OutboundCommands { get; }

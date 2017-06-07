@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Carupano.Configuration
 {
+    using Messaging;
+    using Messaging.Internal;
     public static class Extensions
     {
         public static BoundedContextModelBuilder WithAzureServiceBus(this BoundedContextModelBuilder model, string connectionString)
