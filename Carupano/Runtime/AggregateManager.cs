@@ -7,7 +7,7 @@ using Carupano.Model;
 
 namespace Carupano
 {
-
+    using Persistence;
     public class AggregateManager : IAggregateManager
     {
         readonly IEnumerable<AggregateModel> Aggregates;

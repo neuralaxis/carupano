@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Carupano.Configuration
 {
     using Model;
+    using Persistence;
     public class BoundedContextModelBuilder
     {
         IServiceCollection _services;
@@ -64,7 +64,7 @@ namespace Carupano.Configuration
             var aggregates = _aggregates.Select(c => c.Build());
             var repositories = _repos.Select(c => c.Build());
             _services.AddSingleton<IAggregateManager>((svcs) => new AggregateManager(aggregates, svcs.GetRequiredService<IEventStore>(), svcs.GetRequiredService<IServiceProvider>()));
-
+            
             return new BoundedContextModel(
                 aggregates,
                 projections,

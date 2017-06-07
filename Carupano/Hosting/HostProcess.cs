@@ -9,6 +9,7 @@ namespace Carupano.Hosting
 {
     using Configuration;
     using Messaging;
+    using Persistence;
     public class HostProcess
     {
         public static void Run(string[] args)

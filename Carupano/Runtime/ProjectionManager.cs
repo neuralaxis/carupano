@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Carupano
 {
     using Messaging;
+    using Persistence;
     public class ProjectionManager
     {
         IEventBus Bus;
