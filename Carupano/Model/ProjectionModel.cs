@@ -10,11 +10,9 @@ namespace Carupano.Model
     public class ProjectionModel
     {
         List<EventHandlerModel> _events = new List<EventHandlerModel>();
-        List<QueryHandlerModel> _queries = new List<QueryHandlerModel>();
         Func<IServiceProvider, object> _factory;
         public Type Type { get; }
         public IEnumerable<EventHandlerModel> EventHandlers { get { return _events; } }
-        public IEnumerable<QueryHandlerModel> QueryHandlers { get { return _queries; } }
         
         public IProjectionStateProvider State { get; private set; }
         public ProjectionModel(Type projection)
@@ -25,10 +23,6 @@ namespace Carupano.Model
         public void AddEventHandler(EventHandlerModel eventHandlerModel)
         {
             _events.Add(eventHandlerModel);
-        }
-        public void AddQueryHandler(QueryHandlerModel model)
-        {
-            _queries.Add(model);
         }
         public void SetStateProvider(IProjectionStateProvider state)
         {
@@ -51,13 +45,11 @@ namespace Carupano.Model
         public ProjectionModel Model { get; }
         public object Object { get; }
         public IEnumerable<EventHandlerInstance> EventHandlers { get; }
-        public IEnumerable<QueryHandlerInstance> QueryHandlers { get; }
         public ProjectionInstance(ProjectionModel model, object instance)
         {
             Model = model;
             Object = instance;
             EventHandlers = model.EventHandlers.Select(c => new EventHandlerInstance(this.Object, c));
-            QueryHandlers = model.QueryHandlers.Select(c => new QueryHandlerInstance(this.Object, c));
         }
 
         public bool Handles(PublishedEvent evt)
@@ -68,11 +60,6 @@ namespace Carupano.Model
         public void Handle(PublishedEvent evt)
         {
             EventHandlers.Single(c => c.Handles(evt)).Handle(evt);
-        }
-
-        public bool Handles(QueryInstance query)
-        {
-            return false;
         }
 
         public void SetState(long seqNum)

@@ -10,12 +10,17 @@ namespace Carupano
 
     public class AggregateManager : IAggregateManager
     {
-        BoundedContextModel Model;
-        IEventStore Store;
-        IServiceProvider Services;
-        public AggregateManager(BoundedContextModel model, IEventStore store, IServiceProvider svcs)
+        readonly IEnumerable<AggregateModel> Aggregates;
+        readonly IEnumerable<CommandModel> Factories;
+        readonly IEnumerable<CommandModel> Commands;
+        readonly IEventStore Store;
+        readonly IServiceProvider Services;
+
+        public AggregateManager(IEnumerable<AggregateModel> aggregates, IEventStore store, IServiceProvider svcs)
         {
-            Model = model;
+            Aggregates = aggregates;
+            Commands = aggregates.SelectMany(c => c.CommandHandlers.Select(x=>x.Command));
+            Factories = aggregates.Select(c => c.FactoryHandler.Command);
             Store = store;
             Services = svcs;
         }
@@ -26,18 +31,18 @@ namespace Carupano
             AggregateModel aggregate;
             AggregateInstance instance;
 
-            if(Model.Factories.Any(c=>c.TargetType == message.GetType()))
+            if(Factories.Any(c=>c.TargetType == message.GetType()))
             {
                 command = new CommandInstance(
-                    Model.Factories.Single(c => c.TargetType == message.GetType()), message);
-                aggregate = Model.Aggregates.Single(c => c.IsCreatedBy(command.Model));
+                    Factories.Single(c => c.TargetType == message.GetType()), message);
+                aggregate = Aggregates.Single(c => c.IsCreatedBy(command.Model));
                 instance = aggregate.CreateInstance(Services);
             }
             else
             {
                 command = new CommandInstance(
-                    Model.Commands.Single(c => c.TargetType == message.GetType()), message);
-                aggregate = Model.Aggregates.Single(c => c.HandlesCommand(command.Model));
+                    Commands.Single(c => c.TargetType == message.GetType()), message);
+                aggregate = Aggregates.Single(c => c.HandlesCommand(command.Model));
                 instance = aggregate.CreateInstance(Services);
 
                 var events = Store.Load(aggregate.Name, command.AggregateId).OfType<object>().Select(c => new DomainEventInstance(c));

@@ -5,24 +5,37 @@ using System.Text;
 
 namespace CarupanoAirlines.Flight
 {
+    public class ReservationsRepository
+    {
+
+        public List<ReservationListItem> List { get; } = new List<ReservationListItem>();
+        public IEnumerable<ReservationListItem> Query(SearchReservationsByFlight query)
+        {
+            return List.Skip(query.Page * query.PageSize).Take(query.PageSize).Where(c => c.FlightId == query.FlightId);
+        }
+        public ReservationListItem Query(FindReservationById x)
+        {
+            return null;
+        }
+    }
     public class ReservationList
     {
-        List<ReservationListItem> _reservations = new List<ReservationListItem>();
+        ReservationsRepository Repository;
         public long LastEventId { get; set; }
+        public ReservationList(ReservationsRepository repo)
+        {
+            Repository = repo;
+        }
         public void On(FlightReservationCreated created)
         {
-            _reservations.Add(new ReservationListItem { Localizer = created.Localizer, FlightId = created.Localizer });
+            Repository.List.Add(new ReservationListItem { Localizer = created.Localizer, FlightId = created.Localizer });
         }
         public void On(FlightReservationCancelled cancelled)
         {
-            var resv = _reservations.Single(c => c.Localizer == cancelled.Localizer);
-            _reservations.Remove(resv);
+            var resv = Repository.List.Single(c => c.Localizer == cancelled.Localizer);
+            Repository.List.Remove(resv);
         }
 
-        public IEnumerable<ReservationListItem> Query(SearchReservationsByFlight query)
-        {
-            return _reservations.Skip(query.Page * query.PageSize).Take(query.PageSize).Where(c => c.FlightId == query.FlightId);
-        }
     }
 
     public class SearchReservationsByFlight
@@ -32,6 +45,10 @@ namespace CarupanoAirlines.Flight
         public string FlightId { get; set; }
     }
 
+    public class FindReservationById
+    {
+
+    }
     public class ReservationListItem
     {
         public string Localizer { get; set; }

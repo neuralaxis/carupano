@@ -14,11 +14,10 @@ namespace Carupano.InMemory
         IAggregateManager _dispatcher;
         Action<object, long?> _eventHandler;
         Action<object> _commandHandler;
-        long _eventStart;
 
         public InMemoryBus(IAggregateManager dispatcher)
         {
-
+            _dispatcher = dispatcher;
         }
         public void Publish(IEnumerable<Tuple<object, long>> evts)
         {

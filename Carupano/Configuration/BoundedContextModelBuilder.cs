@@ -12,6 +12,7 @@ namespace Carupano.Configuration
         IServiceCollection _services;
         List<IAggregateModelBuilder> _aggregates = new List<IAggregateModelBuilder>();
         List<IProjectionModelBuilder> _projections = new List<IProjectionModelBuilder>();
+        List<IRepositoryModelBuilder> _repos = new List<IRepositoryModelBuilder>();
 
         public BoundedContextModelBuilder()
         {
@@ -42,10 +43,13 @@ namespace Carupano.Configuration
             _services.AddScoped(factory);
         }
 
-        public void ReadModel<T>(Action<ReadModelModelBuilder<T>> config)
+        public void ReadModel<TModel, TProvider>(Action<RepositoryModelBuilder<TModel,TProvider>> config)
         {
-            var builder = new ReadModelModelBuilder<T>();
+            var builder = new RepositoryModelBuilder<TModel, TProvider>();
             config(builder);
+            _repos.Add(builder);
+
+
             
         }
 
@@ -58,9 +62,13 @@ namespace Carupano.Configuration
         {
             var projections = _projections.Select(c => c.Build());
             var aggregates = _aggregates.Select(c => c.Build());
+            var repositories = _repos.Select(c => c.Build());
+            _services.AddSingleton<IAggregateManager>((svcs) => new AggregateManager(aggregates, svcs.GetRequiredService<IEventStore>(), svcs.GetRequiredService<IServiceProvider>()));
+
             return new BoundedContextModel(
                 aggregates,
                 projections,
+                repositories,
                 _services.BuildServiceProvider());
         }
     }

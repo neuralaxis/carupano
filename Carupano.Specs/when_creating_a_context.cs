@@ -8,31 +8,8 @@ namespace Carupano.Specs
     using System.Linq;
     using Carupano.Configuration;
     using Model;
-    public class when_configuring_a_context
+    public class when_configuring_a_context : BaseSpec
     {
-        BoundedContextModel Model;
-
-        public when_configuring_a_context()
-        {
-            var builder = new BoundedContextModelBuilder();
-            builder.Aggregate<FlightReservation>(cfg =>
-            {
-                cfg
-                .WithId(c => c.Localizer)
-                .CreatedBy<CreateFlightReservation>()
-                .Executes<CancelFlightReservation>(c => c.Localizer);
-            });
-            builder.Projection<ReservationList>(cfg =>
-            {
-                cfg
-                    .WithState(c => c.LastEventId)
-                    .SubscribesTo<FlightReservationCreated>()
-                    .SubscribesTo<FlightReservationCancelled>()
-                    .RespondsTo<SearchReservationsByFlight>();
-            });
-            Model = builder.Build();
-        }
-
         [Fact]
         public void builds_aggregate()
         {
@@ -61,6 +38,12 @@ namespace Carupano.Specs
         public void builds_query_models()
         {
             Model.Queries.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void builds_read_models()
+        {
+            Model.ReadModels.Should().HaveCount(1);
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carupano
+namespace Carupano.Persistence
 {
-    public interface IRepository
+    public interface IRepository<TModel>
     {
-        object FindById(string id);
+        Task<TModel> QuerySingle<TQuery>(TQuery query);
+        Task<IEnumerable<TModel>> QueryMany<TQuery>(TQuery query);
     }
 }

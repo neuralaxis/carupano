@@ -34,14 +34,7 @@ namespace Carupano.Configuration
             _model.SetStateProvider(state);
             return this;
         }
-
-
-        public ProjectionModelBuilder<T> RespondsTo<TQuery>()
-        {
-            var method = FindMethodByParameter(typeof(TQuery));
-            _model.AddQueryHandler(new QueryHandlerModel(method, new QueryModel(typeof(T), method.ReturnType, typeof(TQuery))));
-            return this;
-        }
+        
 
         public void AutoSubscribe()
         {
