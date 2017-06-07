@@ -1,24 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Carupano
 {
-    public interface IEventBus
-    {
-        void Publish(IEnumerable<Tuple<object, long>> evts);
-        void Publish(object evt, long seq);
-        void Publish(object o);
-        void SetEventHandler(Action<object, long?> handler);
-    }
-
-    public interface ICommandBus
-    {
-        void Send(object cmd);
-        void SetCommandHandler(Action<object> handler);
-    }
 
     public class Route
     {
