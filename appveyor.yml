@@ -2,10 +2,10 @@ version: 1.0.{build}-beta
 install:
     - cmd: dotnet restore
 build_script:
-    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION% /p:PackageId Carupano
-    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION% /p:PackageId Carupano.Azure
-    - dotnet pack carupano.mongodb\carupano.mongodb.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION% /p:PackageId Carupano.MongoDb
-    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION%  /p:PackageId Carupano.SqlServer
+    - dotnet pack carupano\carupano.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION% /p:PackageId=Carupano
+    - dotnet pack carupano.azure\carupano.azure.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION% /p:PackageId=Carupano.Azure
+    - dotnet pack carupano.mongodb\carupano.mongodb.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION% /p:PackageId=Carupano.MongoDb
+    - dotnet pack carupano.sqlserver\carupano.sqlserver.csproj --include-symbols /p:PackageVersion=%APPVEYOR_BUILD_VERSION%  /p:PackageId=Carupano.SqlServer
 test_script:
     - cd carupano.unittests && dotnet xunit
     - cd ..\carupano.specs && dotnet xunit
