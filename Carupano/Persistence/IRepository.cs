@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Carupano
 {
-    interface IRepository
+    public interface IRepository
     {
         object FindById(string id);
     }

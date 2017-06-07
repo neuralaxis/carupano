@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Carupano.Hosting
 {
     using Configuration;
+    using Messaging;
     public class HostProcess
     {
         public static void Run(string[] args)

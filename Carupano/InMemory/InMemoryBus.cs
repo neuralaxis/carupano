@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Carupano.InMemory
 {
+    using Messaging;
     public class InMemoryBus : 
         ICommandBus, 
         IEventBus

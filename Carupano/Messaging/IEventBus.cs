@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Carupano
+namespace Carupano.Messaging
 {
     public interface IEventBus
     {
