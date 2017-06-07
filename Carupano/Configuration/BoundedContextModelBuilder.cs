@@ -42,6 +42,13 @@ namespace Carupano.Configuration
             _services.AddScoped(factory);
         }
 
+        public void ReadModel<T>(Action<ReadModelModelBuilder<T>> config)
+        {
+            var builder = new ReadModelModelBuilder<T>();
+            config(builder);
+            
+        }
+
         public void Services(Action<IServiceCollection> cfg)
         {
             cfg(_services);
