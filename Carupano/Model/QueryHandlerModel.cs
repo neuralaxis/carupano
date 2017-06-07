@@ -13,6 +13,11 @@ namespace Carupano.Model
             Method = methodInfo;
             Query = query;
         }
+
+        public bool Handles(QueryModel model)
+        {
+            return Query.Type == model.Type && Query.ResponseType == model.ResponseType;
+        }
     }
 
     public class QueryHandlerInstance
@@ -23,6 +28,29 @@ namespace Carupano.Model
         {
             Instance = instance;
             Model = model;
+        }
+
+        public bool Handles(QueryInstance instance)
+        {
+            return Model.Query.IsSameAs(instance.Model);
+        }
+        public QueryResponse Handle(QueryInstance instance)
+        {
+            var result = Model.Method.Invoke(Instance, new[] { instance.Object });
+            return new QueryResponse(instance, this, result);
+        }
+    }
+
+    public class QueryResponse
+    {
+        public QueryInstance Query { get; }
+        public QueryHandlerInstance Handler { get; }
+        public object Result { get; }
+        public QueryResponse(QueryInstance query, QueryHandlerInstance handler, object result)
+        {
+            Query = query;
+            Handler = handler;
+            Result = result;
         }
     }
 
@@ -37,14 +65,23 @@ namespace Carupano.Model
             ResponseType = responseType;
             Type = type;
         }
+
+        public bool IsSameAs(QueryModel query)
+        {
+            return TargetType == query.TargetType
+                 && ResponseType == query.ResponseType
+                 && Type == query.Type;
+        }
     }
     public class QueryInstance
     {
-        public object Query { get; }
+        public object Object { get; }
         public QueryModel Model { get; }
+        
         public QueryInstance(object query, QueryModel model)
         {
-            Query = query;
+            Object = query;
+            Model = model;
         }
     }
 }

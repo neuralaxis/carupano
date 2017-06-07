@@ -7,13 +7,17 @@ using CarupanoAirlines.Flight;
 using System.Linq;
 using Carupano.Persistence;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.DependencyInjection;
 namespace Carupano.Specs
 {
     
     public class when_querying_a_read_model : BaseSpec
     {
         IRepository<ReservationListItem> Repository;
+        public when_querying_a_read_model()
+        {
+            Repository = Model.Services.GetRequiredService<IRepository<ReservationListItem>>();
+        }
         [Fact]
         public async Task gets_single_result()
         {

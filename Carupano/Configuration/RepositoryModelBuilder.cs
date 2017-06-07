@@ -13,8 +13,10 @@ namespace Carupano.Configuration
     {
         RepositoryModel _model;
         List<QueryHandlerModel> _queries = new List<QueryHandlerModel>();
+        Func<IServiceProvider,TProvider> _factory;
         public RepositoryModelBuilder()
         {
+
         }
         public RepositoryModelBuilder<TModel, TProvider> RespondsTo<TQuery>(Expression<Func<TProvider,Func<TQuery,TModel>>> func) 
         {
@@ -45,9 +47,15 @@ namespace Carupano.Configuration
             return this;
         }
 
+        public RepositoryModelBuilder<TModel, TProvider> UseFactory(Func<IServiceProvider,TProvider> factory)
+        {
+            _factory = factory;
+            return this;
+        }
+
         public RepositoryModel Build()
         {
-            return new RepositoryModel(typeof(TProvider), new ReadModelModel(typeof(TModel)), _queries);
+            return new RepositoryModel(typeof(TProvider), new ReadModelModel(typeof(TModel)), _queries, _factory != null ? new Func<IServiceProvider, object>((svcs)=>_factory) : null);
         }
     }
 }

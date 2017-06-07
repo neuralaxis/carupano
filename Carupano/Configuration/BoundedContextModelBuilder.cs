@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Reflection;
 namespace Carupano.Configuration
 {
     using Model;
@@ -48,9 +48,6 @@ namespace Carupano.Configuration
             var builder = new RepositoryModelBuilder<TModel, TProvider>();
             config(builder);
             _repos.Add(builder);
-
-
-            
         }
 
         public void Services(Action<IServiceCollection> cfg)
@@ -64,7 +61,14 @@ namespace Carupano.Configuration
             var aggregates = _aggregates.Select(c => c.Build());
             var repositories = _repos.Select(c => c.Build());
             _services.AddSingleton<IAggregateManager>((svcs) => new AggregateManager(aggregates, svcs.GetRequiredService<IEventStore>(), svcs.GetRequiredService<IServiceProvider>()));
-            
+            foreach(var repo in repositories)
+            {
+                if (!_services.Any(c => c.ServiceType.IsAssignableFrom(repo.Type)))
+                    if (repo.Factory != null) _services.AddScoped(repo.Type, repo.Factory);
+                    else _services.AddScoped(repo.Type);
+
+                _services.AddScoped(repo.GenericServiceType, repo.GetRepositoryServiceFactory());
+            }
             return new BoundedContextModel(
                 aggregates,
                 projections,
