@@ -89,10 +89,10 @@ namespace Carupano.Azure
             return msg;
         }
 
-        public void Send(object cmd)
+        public async Task Send(object cmd)
         {
             var msg = Serialize(cmd);
-            _commands[cmd.GetType()].SendAsync(msg).Wait();
+            await _commands[cmd.GetType()].SendAsync(msg);
         }
 
         public void Publish(IEnumerable<Tuple<object, long>> evts)

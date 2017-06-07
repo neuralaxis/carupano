@@ -9,7 +9,7 @@ namespace Carupano.Messaging
 
     public interface ICommandBus
     {
-        void Send(object cmd);
+        Task Send(object cmd);
         void SetCommandHandler(Action<object> handler);
     }
 
