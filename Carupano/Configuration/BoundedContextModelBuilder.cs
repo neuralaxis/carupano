@@ -33,6 +33,7 @@ namespace Carupano.Configuration
             _projections.Add(builder);
             _services.AddScoped(typeof(T));
         }
+
         public void Projection<T>(Func<IServiceProvider,T> factory, Action<ProjectionModelBuilder<T>> config) where T: class
         {
             var builder = new ProjectionModelBuilder<T>();

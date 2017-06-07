@@ -43,6 +43,18 @@ namespace Carupano.Configuration
             return this;
         }
 
+        public void AutoSubscribe()
+        {
+            foreach(var method in typeof(T).GetMethods())
+            {
+                var args = method.GetParameters();
+                if (method.IsPublic && args.Count() == 1 && args.First().DefaultValue == null && !method.IsConstructor)
+                {
+                    _model.AddEventHandler(new EventHandlerModel(method, new EventModel(args.First().GetType())));
+                }
+            }
+        }
+
         public ProjectionModelBuilder<T> SubscribesTo<TEvent>(Expression<Func<T,Action<TEvent>>> handler)
         {
             //TODO: may have to keep list of EventModels so there aren't multiple for the same event type, or make it a value object.
