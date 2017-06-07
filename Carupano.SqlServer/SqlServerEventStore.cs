@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Carupano.SqlServer
 {
+    using Persistence;
     public class SqlServerEventStore : IEventStore, IDisposable
     {
         SqlConnection _conn;

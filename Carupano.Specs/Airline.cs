@@ -40,9 +40,13 @@ namespace CarupanoAirlines.Flight
 
     public class SearchReservationsByFlight
     {
-        public int Page { get; set; }
-        public int PageSize { get; set; }
+        public int Page { get; set; } = 0;
+        public int PageSize { get; set; } = 10;
         public string FlightId { get; set; }
+        public SearchReservationsByFlight(string flightId)
+        {
+            FlightId = flightId;
+        }
     }
 
     public class FindReservationById

@@ -43,12 +43,14 @@ namespace Carupano.InMemory
         }
 
 
-        public async Task Send(object cmd)
+        public Task Send(object cmd)
         {
-            await new Task(() =>
+            var task = new Task(() =>
             {
                 _dispatcher.ExecuteCommand(cmd);
             });
+            task.Start();
+            return task;
         }
 
         public void SetCommandHandler(Action<object> handler)

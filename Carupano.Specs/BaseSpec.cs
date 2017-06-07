@@ -1,4 +1,5 @@
 ﻿using Carupano.Configuration;
+using Carupano.Messaging;
 using Carupano.Model;
 using CarupanoAirlines.Flight;
 using System;
@@ -7,14 +8,17 @@ using System.Text;
 
 namespace Carupano.Specs
 {
+    using Persistence;
     public class BaseSpec
     {
         protected readonly BoundedContextModel Model;
+        protected readonly ICommandBus CommandBus;
 
         public BaseSpec()
         {
             var builder = new BoundedContextModelBuilder();
             builder.UseInMemoryBuses();
+            builder.UseInMemoryEventStore();
             builder.Aggregate<FlightReservation>(cfg =>
             {
                 cfg
@@ -34,6 +38,7 @@ namespace Carupano.Specs
                 cfg.RespondsTo<SearchReservationsByFlight>(c => c.Query);
             });
             Model = builder.Build();
+            CommandBus = (ICommandBus)Model.Services.GetService(typeof(ICommandBus));
         }
 
     }

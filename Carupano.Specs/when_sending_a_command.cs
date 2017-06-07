@@ -16,8 +16,7 @@ namespace Carupano.Specs
         [Fact]
         public async Task does_not_throw_an_exception()
         {
-            var bus = Model.Services.GetRequiredService<ICommandBus>();
-            await bus.Send(new CreateFlightReservation("test", "test", "test"));
+            await CommandBus.Send(new CreateFlightReservation("test", "test", "test"));
         }
     }
 }
