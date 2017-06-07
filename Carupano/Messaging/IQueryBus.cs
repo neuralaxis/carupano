@@ -7,6 +7,6 @@ namespace Carupano.Messaging
 {
     public interface IQueryBus
     {
-        Task<TResponse> Send<TResponse, TQuery>(TQuery query);
+        Task<object> Send<TQuery>(TQuery query);
     }
 }
