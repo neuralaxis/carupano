@@ -10,5 +10,9 @@ namespace Carupano.Configuration
         {
             return this;
         }
+        public ReadModelModelBuilder<T> AutoConfigure()
+        {
+            return this;
+        }
     }
 }
