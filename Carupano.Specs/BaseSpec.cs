@@ -26,14 +26,14 @@ namespace Carupano.Specs
                 .CreatedBy<CreateFlightReservation>()
                 .Executes<CancelFlightReservation>(c => c.Localizer);
             });
-            builder.Projection<ReservationList>(cfg =>
+            builder.Projection<ReservationViewProjection>(cfg =>
             {
                 cfg
                     .WithState(c => c.LastEventId)
                     .SubscribesTo<FlightReservationCreated>()
                     .SubscribesTo<FlightReservationCancelled>();
             });
-            builder.ReadModel<ReservationListItem, ReservationsRepository>(cfg =>
+            builder.ReadModel<ReservationView, ReservationViewRepository>(cfg =>
             {
                 cfg.RespondsTo<SearchReservationsByFlight>(c => c.Query);
             });
