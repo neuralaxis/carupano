@@ -14,10 +14,14 @@ namespace Carupano.Specs
     public class when_querying_a_read_model : BaseSpec
     {
         IRepository<ReservationView> Repository;
+        Hosting.HostProcess host;
         public when_querying_a_read_model()
         {
             Repository = Model.Services.GetRequiredService<IRepository<ReservationView>>();
+            host = new Hosting.HostProcess(Model);
+            host.Start();
         }
+
         [Fact]
         public async Task gets_single_result()
         {

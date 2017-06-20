@@ -35,5 +35,6 @@ namespace Carupano.Model
         public IEnumerable<ReadModelModel> ReadModels { get; private set; }
         public IServiceProvider Services { get; private set; }
         
+        
     }
 }

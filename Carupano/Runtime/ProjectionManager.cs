@@ -10,10 +10,10 @@ namespace Carupano
     using Persistence;
     public class ProjectionManager
     {
-        IEventBus Bus;
+        IInboundMessageBus Bus;
         IEventStore Store;
         IEnumerable<Model.ProjectionInstance> Projections;
-        public ProjectionManager(IEventStore store, IEventBus bus, IEnumerable<Model.ProjectionInstance> projections)
+        public ProjectionManager(IEventStore store, IInboundMessageBus bus, IEnumerable<Model.ProjectionInstance> projections)
         {
             Store = store;
             Bus = bus;
@@ -35,15 +35,20 @@ namespace Carupano
                 }
                 //TODO: events might come while it's reading, so we need to set teh event handler
                 //first and accumulate while building projection.
-                Bus.SetEventHandler((msg, seq) =>
+                Bus.MessageReceived += (msg) =>
                 {
-                    var evt = new Model.PublishedEvent(msg, seq.Value);
-                    if (proj.Handles(evt))
+                    if (msg is EventMessage)
                     {
-                        proj.Handle(evt);
-                        proj.SetState(seq.Value);
+                        var inbound = msg as EventMessage;
+                        var evt = new Model.PublishedEvent(inbound.Payload, inbound.SequenceNo);
+                        if (proj.Handles(evt))
+                        {
+                            proj.Handle(evt);
+                            proj.SetState(inbound.SequenceNo);
+                        }
                     }
-                });
+                };
+                
             }
         }
     }

@@ -16,7 +16,7 @@ namespace Carupano.Configuration
                 Func<IServiceProvider, Azure.AzureServiceBus> factory = (svcs) =>
                 {
                     //TODO: endpoint name
-                    return new Azure.AzureServiceBus(connectionString, String.Empty, svcs.GetService<ISerialization>(), svcs.GetService<RouteTable>());
+                    return new Azure.AzureServiceBus(connectionString, String.Empty, svcs.GetRequiredService<ISerialization>(), svcs.GetRequiredService<RouteTable>());
                 };
                 cfg.AddScoped<ICommandBus>(factory);
                 cfg.AddScoped<IEventBus>(factory);

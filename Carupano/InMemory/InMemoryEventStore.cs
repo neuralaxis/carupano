@@ -11,6 +11,8 @@ namespace Carupano.InMemory
     public class InMemoryEventStore : IEventStore
     {
         List<Entry> _events = new List<Entry>();
+        
+
         public IEnumerable Load(string aggregate, string id)
         {
             return _events.Where(c => c.Aggregate == aggregate && c.Id == id).SelectMany(c => c.Events).Select(c => c.Event);

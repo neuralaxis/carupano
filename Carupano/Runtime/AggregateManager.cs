@@ -5,26 +5,41 @@ using System.Text;
 using System.Threading.Tasks;
 using Carupano.Model;
 
-namespace Carupano
+namespace Carupano.Runtime
 {
+    using Carupano.Messaging;
     using Persistence;
-    public class AggregateManager : IAggregateManager
+    public class AggregateManager
     {
         readonly IEnumerable<AggregateModel> Aggregates;
         readonly IEnumerable<CommandModel> Factories;
         readonly IEnumerable<CommandModel> Commands;
+        readonly IInboundMessageBus Inbound;
+        readonly IEventBus Outbound;
         readonly IEventStore Store;
         readonly IServiceProvider Services;
 
-        public AggregateManager(IEnumerable<AggregateModel> aggregates, IEventStore store, IServiceProvider svcs)
+        public AggregateManager(IEnumerable<AggregateModel> aggregates, 
+            IEventStore store, IInboundMessageBus inbound, IEventBus bus, IServiceProvider svcs)
         {
             Aggregates = aggregates;
             Commands = aggregates.SelectMany(c => c.CommandHandlers.Select(x=>x.Command));
             Factories = aggregates.Select(c => c.FactoryHandler.Command);
             Store = store;
             Services = svcs;
+            Inbound = inbound;
+            Outbound = bus;
+            Inbound.MessageReceived += HandleMessage;
         }
 
+        private void HandleMessage(Message msg)
+        {
+            if(msg is CommandMessage)
+            {
+                ExecuteCommand(msg.Payload);
+            }
+            //TODO: Handle aggregate events.
+        }
         public CommandExecutionResult ExecuteCommand(object message)
         {
             CommandInstance command;
@@ -45,12 +60,13 @@ namespace Carupano
                 aggregate = Aggregates.Single(c => c.HandlesCommand(command.Model));
                 instance = aggregate.CreateInstance(Services);
 
-                var events = Store.Load(aggregate.Name, command.AggregateId).OfType<object>().Select(c => new DomainEventInstance(c));
-                instance.Apply(events);
+                var past = Store.Load(aggregate.Name, command.AggregateId).OfType<object>().Select(c => new DomainEventInstance(c));
+                instance.Apply(past);
             }
 
             var result = instance.Execute(command);
-            Store.Save(aggregate.Name, instance.Id, result.DomainEvents.Select(c => c.Object));
+            var events = Store.Save(aggregate.Name, instance.Id, result.DomainEvents.Select(c => c.Object));
+            Outbound.Publish(events.Select(c => new Tuple<object, long>(c.Event, c.SequenceNo)));
             return result;
         }
         

@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 namespace Carupano.InMemory
 {
     using Messaging;
+    using Runtime;
     public class InMemoryBus : 
         ICommandBus, 
-        IEventBus
+        IEventBus,
+        IInboundMessageBus
     {
-        IAggregateManager _dispatcher;
-        Action<object, long?> _eventHandler;
-        Action<object> _commandHandler;
+        public event MessageHandler MessageReceived;
 
-        public InMemoryBus(IAggregateManager dispatcher)
+        public InMemoryBus()
         {
-            _dispatcher = dispatcher;
         }
+
         public void Publish(IEnumerable<Tuple<object, long>> evts)
         {
             foreach(var msg in evts)
@@ -29,38 +29,27 @@ namespace Carupano.InMemory
 
         public void Publish(object evt, long? seq)
         {
-            _eventHandler(evt, seq);
-
+            MessageReceived(new EventMessage(Guid.NewGuid().ToString(), seq.HasValue ? seq.Value : -1, evt));
         }
         public void Publish(object evt, long seq)
         {
-            _eventHandler(evt, seq);
+            MessageReceived(new EventMessage(Guid.NewGuid().ToString(), seq, evt));
         }
 
         public void Publish(object o)
         {
-            _eventHandler(o, null);
+            MessageReceived(new EventMessage(Guid.NewGuid().ToString(), -1, o));
         }
-
 
         public Task Send(object cmd)
         {
-            var task = new Task(() =>
+            return Task.Run(() =>
             {
-                _dispatcher.ExecuteCommand(cmd);
+                MessageReceived(new CommandMessage(Guid.NewGuid().ToString(), cmd));
             });
-            task.Start();
-            return task;
         }
-
-        public void SetCommandHandler(Action<object> handler)
-        {
-            _commandHandler = handler;
-        }
-
-        public void SetEventHandler(Action<object, long?> handler)
-        {
-            _eventHandler = handler;
-        }
+        
+        
+        
     }
 }

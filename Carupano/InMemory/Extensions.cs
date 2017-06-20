@@ -25,10 +25,11 @@ namespace Carupano
             {
                 var factory = new Func<IServiceProvider, InMemoryBus>((svcs) =>
                 {
-                    return new InMemoryBus(svcs.GetRequiredService<IAggregateManager>());
+                    return new InMemoryBus();
                 });
                 cfg.AddSingleton<ICommandBus>(factory);
                 cfg.AddSingleton<IEventBus>(factory);
+                cfg.AddSingleton<IInboundMessageBus>(factory);
             });
             return builder;
         }

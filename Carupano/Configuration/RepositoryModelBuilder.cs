@@ -11,7 +11,6 @@ namespace Carupano.Configuration
 
     public class RepositoryModelBuilder<TModel,TProvider> : IRepositoryModelBuilder
     {
-        RepositoryModel _model;
         List<QueryHandlerModel> _queries = new List<QueryHandlerModel>();
         Func<IServiceProvider,TProvider> _factory;
         public RepositoryModelBuilder()

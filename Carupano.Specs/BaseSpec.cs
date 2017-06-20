@@ -38,7 +38,14 @@ namespace Carupano.Specs
                 cfg.RespondsTo<SearchReservationsByFlight>(c => c.Query);
             });
             Model = builder.Build();
-            CommandBus = (ICommandBus)Model.Services.GetService(typeof(ICommandBus));
+            try
+            {
+                CommandBus = (ICommandBus)Model.Services.GetService(typeof(ICommandBus));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
     }

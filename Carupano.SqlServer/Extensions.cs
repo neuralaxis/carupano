@@ -9,7 +9,7 @@ namespace Carupano.Configuration
 {
     public static class Extensions
     {
-        public static BoundedContextModelBuilder WithSqlServerEventStore(this BoundedContextModelBuilder model, string connectionString)
+        public static BoundedContextModelBuilder UseSqlServerEventStore(this BoundedContextModelBuilder model, string connectionString)
         {
             model.Services(cfg =>
             {

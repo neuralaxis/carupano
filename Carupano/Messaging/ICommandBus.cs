@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Carupano.Messaging
 {
-
     public interface ICommandBus
     {
         Task Send(object cmd);
-        void SetCommandHandler(Action<object> handler);
     }
 
 }

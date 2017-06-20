@@ -10,8 +10,24 @@ namespace Carupano.Hosting
     using Configuration;
     using Messaging;
     using Persistence;
+    using Model;
     public class HostProcess
     {
+        ProjectionManager _mgr;
+        public HostProcess(BoundedContextModel model)
+        {
+            _mgr = new ProjectionManager(
+                model.Services.GetRequiredService<IEventStore>(),
+                model.Services.GetRequiredService<IInboundMessageBus>(),
+                model.Projections.Select(c => c.CreateInstance(model.Services))
+                );
+            
+        }
+
+        public void Start()
+        {
+            _mgr.Start();
+        }
         public static void Run(string[] args)
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
@@ -39,7 +55,9 @@ namespace Carupano.Hosting
             else
             {
                 var model = builder.Build();
-                var mgr = new ProjectionManager(model.Services.GetService<IEventStore>(), model.Services.GetService<IEventBus>(), model.Projections.Select(c => c.CreateInstance(model.Services)));
+                var mgr = new ProjectionManager(model.Services.GetService<IEventStore>(), 
+                    model.Services.GetService<IInboundMessageBus>(), 
+                    model.Projections.Select(c => c.CreateInstance(model.Services)));
                 mgr.Start();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Carupano is running...");
