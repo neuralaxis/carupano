@@ -41,9 +41,9 @@ namespace Carupano.Configuration
             foreach(var method in typeof(T).GetMethods())
             {
                 var args = method.GetParameters();
-                if (method.IsPublic && args.Count() == 1 && args.First().DefaultValue == null && !method.IsConstructor)
+                if (method.IsPublic && args.Count() == 1 && !args.First().HasDefaultValue && !method.IsSpecialName && !method.IsConstructor && method.DeclaringType != typeof(Object))
                 {
-                    _model.AddEventHandler(new EventHandlerModel(method, new EventModel(args.First().GetType())));
+                    _model.AddEventHandler(new EventHandlerModel(method, new EventModel(args.First().ParameterType)));
                 }
             }
         }

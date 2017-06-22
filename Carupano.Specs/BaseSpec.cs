@@ -32,8 +32,7 @@ namespace Carupano.Specs
             {
                 cfg
                     .WithState(c => c.LastEventId)
-                    .SubscribesTo<FlightReservationCreated>()
-                    .SubscribesTo<FlightReservationCancelled>();
+                    .AutoSubscribe();
             });
             builder.ReadModel<ReservationView, ReservationViewRepository>(cfg =>
             {
