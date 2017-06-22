@@ -9,14 +9,15 @@ using Carupano.Model;
 namespace Carupano.Azure
 {
     using Messaging.Internal;
-    public class AzureServiceBus : Messaging.ICommandBus, Messaging.IEventBus
+    public class AzureServiceBus : Messaging.ICommandBus, Messaging.IEventBus, Messaging.IInboundMessageBus
     {
         IDictionary<Type, QueueClient> _commands = new Dictionary<Type, QueueClient>();
         IDictionary<Type, TopicClient> _outboundEvent = new Dictionary<Type, TopicClient>();
         IDictionary<Type, SubscriptionClient> _inboundEvents = new Dictionary<Type, SubscriptionClient>();
         ISerialization _serialization;
-        Action<object> _command;
-        Action<object,long?> _event;
+
+        public event Messaging.MessageHandler MessageReceived;
+
         public AzureServiceBus(string connectionString, 
             string endpointName, 
             ISerialization serialization,
@@ -50,28 +51,24 @@ namespace Carupano.Azure
         private Task OnInboundEvent(Message msg, CancellationToken token)
         {
             var evt = Deserialize(msg);
+            var id = msg.MessageId;
             var seq = msg.UserProperties.ContainsKey("SeqNo") ? Convert.ToInt64(msg.UserProperties["SeqNo"]) : new Nullable<long>();
-            _event(evt, seq);
+            OnMessageReceived(new Messaging.EventMessage(msg.MessageId, seq.HasValue ? seq.Value : -1, evt));
             return Task.FromResult(0);
         }
 
         public Task OnInboundCommand(Message msg, CancellationToken token)
         {
             var cmd = Deserialize(msg);
-            _command(cmd);
+            var id = msg.MessageId;
+            OnMessageReceived(new Messaging.CommandMessage(id, cmd));
             return Task.FromResult(0);
         }
-
-        public void SetEventHandler(Action<object, long?> handler)
+        
+        private void OnMessageReceived(Messaging.Message msg)
         {
-            _event = handler;
+            MessageReceived(msg);
         }
-
-        public void SetCommandHandler(Action<object> handler)
-        {
-            _command = handler;
-        }
-
         private object Deserialize(Message msg)
         {
             var type = msg.UserProperties["ClrType"] as string;
