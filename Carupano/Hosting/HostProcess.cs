@@ -11,22 +11,30 @@ namespace Carupano.Hosting
     using Messaging;
     using Persistence;
     using Model;
+    using Carupano.Runtime;
+
     public class HostProcess
     {
-        ProjectionManager _mgr;
+        ProjectionManager _projections;
+        AggregateManager _aggregates;
         public HostProcess(BoundedContextModel model)
         {
-            _mgr = new ProjectionManager(
+            _projections = new ProjectionManager(
                 model.Services.GetRequiredService<IEventStore>(),
                 model.Services.GetRequiredService<IInboundMessageBus>(),
                 model.Projections.Select(c => c.CreateInstance(model.Services))
                 );
-            
+            _aggregates = new AggregateManager(
+                model.Aggregates,
+                model.Services.GetRequiredService<IEventStore>(),
+                model.Services.GetRequiredService<IInboundMessageBus>(),
+                model.Services.GetRequiredService<IEventBus>(),
+                model.Services);
         }
 
         public void Start()
         {
-            _mgr.Start();
+            _projections.Start();
         }
         public static void Run(string[] args)
         {

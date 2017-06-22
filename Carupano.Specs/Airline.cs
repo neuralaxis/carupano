@@ -27,7 +27,7 @@ namespace CarupanoAirlines.Flight
         }
         public void On(FlightReservationCreated created)
         {
-            Repository.List.Add(new ReservationView { Localizer = created.Localizer, FlightId = created.Localizer });
+            Repository.List.Add(new ReservationView { Localizer = created.Localizer, FlightId = created.FlightId });
         }
         public void On(FlightReservationCancelled cancelled)
         {
@@ -70,7 +70,7 @@ namespace CarupanoAirlines.Flight
         {
             var evt = new FlightReservationCreated
             {
-                Localizer = Guid.NewGuid().ToString().Substring(5),
+                Localizer = cmd.Localizer,
                 FlightId = cmd.FlightId,
                 PassengerId = cmd.PassengerId
             };

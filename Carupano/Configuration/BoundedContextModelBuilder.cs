@@ -63,12 +63,6 @@ namespace Carupano.Configuration
             var projections = _projections.Select(c => c.Build());
             var aggregates = _aggregates.Select(c => c.Build());
             var repositories = _repos.Select(c => c.Build());
-            _services.AddSingleton((svcs) => new AggregateManager(
-                aggregates, 
-                svcs.GetRequiredService<IEventStore>(), 
-                svcs.GetRequiredService<IInboundMessageBus>(),
-                svcs.GetRequiredService<IEventBus>(),
-                svcs.GetRequiredService<IServiceProvider>()));
             
             foreach(var repo in repositories)
             {

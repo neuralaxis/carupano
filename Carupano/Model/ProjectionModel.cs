@@ -10,7 +10,6 @@ namespace Carupano.Model
     public class ProjectionModel
     {
         List<EventHandlerModel> _events = new List<EventHandlerModel>();
-        Func<IServiceProvider, object> _factory;
         public Type Type { get; }
         public IEnumerable<EventHandlerModel> EventHandlers { get { return _events; } }
         

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carupano
+namespace Carupano.Runtime
 {
     using Messaging;
     using Persistence;
@@ -13,6 +13,7 @@ namespace Carupano
         IInboundMessageBus Bus;
         IEventStore Store;
         IEnumerable<Model.ProjectionInstance> Projections;
+
         public ProjectionManager(IEventStore store, IInboundMessageBus bus, IEnumerable<Model.ProjectionInstance> projections)
         {
             Store = store;

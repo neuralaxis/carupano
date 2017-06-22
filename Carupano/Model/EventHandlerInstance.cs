@@ -6,6 +6,7 @@
         public object Target { get; set; }
         public EventHandlerInstance(object target, EventHandlerModel model)
         {
+            Target = target;
             Model = model;
         }
         public bool Handles(PublishedEvent evt)

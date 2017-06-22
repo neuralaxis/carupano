@@ -7,7 +7,7 @@ namespace Carupano.Model
         public Type Type { get; }
         public EventModel(Type type)
         {
-            Type = Type;
+            Type = type;
         }
     }
     

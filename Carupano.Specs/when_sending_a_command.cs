@@ -19,10 +19,5 @@ namespace Carupano.Specs
             await CommandBus.Send(new CreateFlightReservation("test", "test", "test"));
         }
 
-        [Fact]
-        public async Task published_events_are_received_by_projections()
-        {
-
-        }
     }
 }

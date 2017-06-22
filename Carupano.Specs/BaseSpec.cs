@@ -8,11 +8,13 @@ using System.Text;
 
 namespace Carupano.Specs
 {
+    using Microsoft.Extensions.DependencyInjection;
     using Persistence;
     public class BaseSpec
     {
         protected readonly BoundedContextModel Model;
         protected readonly ICommandBus CommandBus;
+        protected readonly Hosting.HostProcess Host;
 
         public BaseSpec()
         {
@@ -38,14 +40,9 @@ namespace Carupano.Specs
                 cfg.RespondsTo<SearchReservationsByFlight>(c => c.Query);
             });
             Model = builder.Build();
-            try
-            {
-                CommandBus = (ICommandBus)Model.Services.GetService(typeof(ICommandBus));
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+            CommandBus = Model.Services.GetRequiredService<ICommandBus>();
+            Host = new Hosting.HostProcess(Model);
+            Host.Start();
         }
 
     }
