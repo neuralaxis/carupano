@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano", "Carupano\Carupano.csproj", "{06FDC509-C23B-408A-931F-3CCE1A76189B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carupano", "Carupano\Carupano.csproj", "{06FDC509-C23B-408A-931F-3CCE1A76189B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano.MongoDb", "Carupano.MongoDb\Carupano.MongoDb.csproj", "{FF68AC37-BB67-4ABF-93BE-75E63A8D3F22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carupano.MongoDb", "Carupano.MongoDb\Carupano.MongoDb.csproj", "{FF68AC37-BB67-4ABF-93BE-75E63A8D3F22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano.SqlServer", "Carupano.SqlServer\Carupano.SqlServer.csproj", "{60463D34-1CD8-4339-919F-9AA46FD81DBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carupano.SqlServer", "Carupano.SqlServer\Carupano.SqlServer.csproj", "{60463D34-1CD8-4339-919F-9AA46FD81DBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carupano.Azure", "Carupano.Azure\Carupano.Azure.csproj", "{E89F9F2A-70E6-4DE0-BB19-492721BF62D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carupano.Azure", "Carupano.Azure\Carupano.Azure.csproj", "{E89F9F2A-70E6-4DE0-BB19-492721BF62D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0AAA3A00-AA35-4783-8E6C-0E920595EAE0}"
 	ProjectSection(SolutionItems) = preProject
