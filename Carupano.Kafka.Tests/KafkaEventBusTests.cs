@@ -31,6 +31,7 @@ namespace Carupano.Kafka.Tests
                 received = true;
             };
             await Bus.Send(new CreateUser());
+
             System.Threading.Thread.Sleep(3000);
             Assert.True(received);
         }

@@ -19,7 +19,6 @@ namespace Carupano.Runtime
             Store = store;
             Bus = bus;
             Projections = projections;
-
         }
 
         public void Start()
