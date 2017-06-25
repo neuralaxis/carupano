@@ -10,7 +10,7 @@ namespace Carupano.Persistence
 {
     public interface IEventStore
     {
-        IEnumerable Load(string aggregate, string id);
+        IEnumerable<PersistedEvent> Load(string aggregate, string id);
         IEnumerable<PersistedEvent> Save(string aggregate, string id, IEnumerable @events);
         IEnumerable<PersistedEvent> Load(long seqNum);
     }

@@ -13,9 +13,9 @@ namespace Carupano.InMemory
         List<Entry> _events = new List<Entry>();
         
 
-        public IEnumerable Load(string aggregate, string id)
+        public IEnumerable<PersistedEvent> Load(string aggregate, string id)
         {
-            return _events.Where(c => c.Aggregate == aggregate && c.Id == id).SelectMany(c => c.Events).Select(c => c.Event);
+            return _events.Where(c => c.Aggregate == aggregate && c.Id == id).SelectMany(c => c.Events);
         }
 
         public IEnumerable<PersistedEvent> Load(long seqNum)

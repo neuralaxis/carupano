@@ -28,23 +28,23 @@ namespace Carupano.Azure
             {
                 var client = new QueueClient(connectionString, route.Name);
                 client.RegisterMessageHandler(OnInboundCommand);
-                _commands.Add(route.Type, client);
+                _commands.Add(route.MessageType, client);
             }
-            foreach(var route in routes.OutboundCommands.Where(c=>!_commands.ContainsKey(c.Type)))
+            foreach(var route in routes.OutboundCommands.Where(c=>!_commands.ContainsKey(c.MessageType)))
             {
                 var client = new QueueClient(connectionString, route.Name);
-                _commands.Add(route.Type, client);
+                _commands.Add(route.MessageType, client);
             }
             foreach(var route in routes.OutboundEvents)
             {
                 var client = new TopicClient(connectionString, route.Name);
-                _outboundEvent.Add(route.Type, client);
+                _outboundEvent.Add(route.MessageType, client);
             }
             foreach(var route in routes.InboundEvents)
             {
                 var client = new SubscriptionClient(connectionString, route.Name, endpointName);
                 client.RegisterMessageHandler(OnInboundEvent);
-                _inboundEvents.Add(route.Type, client);
+                _inboundEvents.Add(route.MessageType, client);
             }
         }
 

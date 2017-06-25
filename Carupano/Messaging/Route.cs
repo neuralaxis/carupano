@@ -8,18 +8,19 @@ namespace Carupano.Messaging.Internal
     public class Route
     {
         public string Name { get; }
-        public Type Type { get; }
+        public Type MessageType { get; }
         public Route(string name, Type type)
         {
             Name = name;
-            Type = type;
+            MessageType = type;
+
         }
-        public bool Matches(Type type)
+        public bool Matches(Type message)
         {
-            return Type == type;
+            return MessageType == message;
         }
     }
-
+    
     public class RouteTable
     {
         public IEnumerable<Route> InboundCommands { get; }
